@@ -2,59 +2,81 @@ package com.dekow.newsgatheringapp.presentation.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.ArrowForward
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.commons.DammyData
+import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
 import com.dekow.newsgatheringapp.domain.model.NewsItem
+import com.dekow.newsgatheringapp.presentation.screen.Screens
 import com.dekow.newsgatheringapp.ui.theme.*
 
 val data = DammyData.data
 val dataList = DammyData.dataList
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    navController: NavHostController
+) {
 
-    Column(
+    Box(
         modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
+            .fillMaxWidth()
+            .fillMaxSize()
+
     ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
+        ) {
 
-        NewsOfTheDay()
-        BreakingNews()
+            NewsOfTheDay(navController = navController)
+            BreakingNews(navController = navController)
 
+        }
+        HomeBottomMenu(
+            navController = navController,
+            items = listOf(
+                HomeBottomMenuItem(title = "home", iconId = R.drawable.ic_icons8_home_48),
+                HomeBottomMenuItem(title = "search", iconId = R.drawable.ic_icons8_search_50),
+                HomeBottomMenuItem(title = "person", iconId = R.drawable.ic_icons8_contacts_32)
+            ),
+            modifier = Modifier.align(Alignment.BottomCenter),
+            selectedItemIndex = 0
+        )
     }
+
 }
 
 @Composable
-fun NewsOfTheDay() {
+fun NewsOfTheDay(
+    navController: NavHostController
+) {
 
     Box(
         modifier = Modifier
@@ -81,11 +103,18 @@ fun NewsOfTheDay() {
         )
 
         Icon(
-            imageVector = Icons.Rounded.Menu,
+            painter = painterResource(id = R.drawable.ic_icons8_menu_60),
             contentDescription = "menu",
             modifier = Modifier
                 .padding(start = 15.dp, top = 25.dp)
-                .size(36.dp),
+                .size(36.dp)
+                .clickable {
+                    navController.navigate(Screens.ProfileScreen.route){
+                        popUpTo(Screens.ProfileScreen.route){
+                            inclusive = true
+                        }
+                    }
+                },
             tint = Color.White,
         )
 
@@ -110,26 +139,50 @@ fun NewsOfTheDay() {
             Text(
                 text = data.desc,
                 modifier = Modifier
-                    .padding(bottom = 15.dp, end = 25.dp),
+                    .padding(bottom = 15.dp, end = 5.dp)
+                    .fillMaxWidth(0.9f),
                 textAlign = TextAlign.Start,
                 fontSize = MaterialTheme.typography.h5.fontSize,
                 color = Color.White,
+                maxLines = 3,
+                fontWeight = FontWeight.Bold,
+                overflow = TextOverflow.Ellipsis,
             )
 
             Row (modifier = Modifier
                 .padding(bottom = 15.dp, top = 5.dp),
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start)
             {
                 Text(
                     text = "Learn More",
-                    modifier = Modifier.padding(end = 5.dp),
+                    modifier = Modifier.padding(end = 5.dp)
+                        .clickable {
+                            navController.navigate(route = Screens.DetailsScreen.route){
+                                popUpTo(Screens.DetailsScreen.route){
+                                    inclusive = true
+                                }
+                            }
+                        },
                     color = Color.White,
+                    fontWeight = FontWeight.Bold,
                 )
-                Icon(
-                    imageVector = Icons.Rounded.ArrowForward,
-                    tint = Color.White,
-                    contentDescription = "learn more arrow"
-                )
+                IconButton(onClick = {
+                    navController.navigate(route = Screens.DetailsScreen.route){
+                        popUpTo(Screens.DetailsScreen.route){
+                            inclusive = true
+                        }
+                    }
+                }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.icons8_right_arrow_50),
+                        tint = Color.White,
+                        modifier = Modifier
+                            .padding(start = 5.dp)
+                            .size(40.dp),
+                        contentDescription = "learn more arrow"
+                    )
+                }
             }
         }
 
@@ -138,11 +191,13 @@ fun NewsOfTheDay() {
 }
 
 @Composable
-fun BreakingNews() {
+fun BreakingNews(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .fillMaxHeight(),
+            .padding(horizontal = 15.dp),
+           // .fillMaxHeight(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -160,14 +215,21 @@ fun BreakingNews() {
                 modifier = Modifier
                     .padding(vertical = 4.dp),
                 textAlign = TextAlign.Center,
-                fontSize = 19.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 21.sp,
+                fontWeight = FontWeight.ExtraBold,
             )
 
             Text(
                 text = "More",
                 modifier = Modifier
-                    .padding(4.dp),
+                    .padding(4.dp)
+                    .clickable {
+                       navController.navigate(route = Screens.SearchScreen.route){
+                           popUpTo(Screens.SearchScreen.route){
+                               inclusive = true
+                           }
+                       }
+                    },
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
             )
@@ -176,7 +238,7 @@ fun BreakingNews() {
 
         LazyRow(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxWidth(),
             contentPadding = PaddingValues(end = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
@@ -213,6 +275,8 @@ fun NewsRowItem(
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold,
             fontSize = 17.sp,
+            maxLines = 4,
+            overflow = TextOverflow.Ellipsis,
         )
 
         Text(
@@ -237,6 +301,6 @@ fun NewsRowItem(
 @Preview(showBackground = true)
 @Composable
 fun HomePev() {
-    NewsOfTheDay()
-    BreakingNews()
+    NewsOfTheDay(navController = rememberNavController())
+    BreakingNews(navController = rememberNavController())
 }

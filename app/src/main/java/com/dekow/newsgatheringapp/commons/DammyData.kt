@@ -8,9 +8,8 @@ object DammyData {
     val data = NewsItem(
         image = R.drawable.newimageplaceholder,
         title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-        desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties worry that divided loyalties" +
-                "worry that divided loyalties " +
-                " within ",
+        desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
         time = "4 hours ago",
         author = "By Fahad Yassin",
         views = 472,
@@ -20,8 +19,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -29,8 +28,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -38,8 +37,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -47,8 +46,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -56,8 +55,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -65,8 +64,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -74,8 +73,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -83,8 +82,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -92,8 +91,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -101,8 +100,8 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,
@@ -110,8 +109,53 @@ object DammyData {
         NewsItem(
             image = R.drawable.newimageplaceholder,
             title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
-            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties" +
-                    " within",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
+            time = "4 hours ago",
+            author = "By Fahad Yassin",
+            views = 472,
+        ),
+        NewsItem(
+            image = R.drawable.newimageplaceholder,
+            title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
+            time = "4 hours ago",
+            author = "By Fahad Yassin",
+            views = 472,
+        ),
+        NewsItem(
+            image = R.drawable.newimageplaceholder,
+            title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
+            time = "4 hours ago",
+            author = "By Fahad Yassin",
+            views = 472,
+        ),
+        NewsItem(
+            image = R.drawable.newimageplaceholder,
+            title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
+            time = "4 hours ago",
+            author = "By Fahad Yassin",
+            views = 472,
+        ),
+        NewsItem(
+            image = R.drawable.newimageplaceholder,
+            title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
+            time = "4 hours ago",
+            author = "By Fahad Yassin",
+            views = 472,
+        ),
+        NewsItem(
+            image = R.drawable.newimageplaceholder,
+            title = "In Ukraine, a Minority Group Feels Ambivalence About the War",
+            desc = "After Moscow’s invasion, some Ukrainians worry that divided loyalties within the" +
+                    " country’s small ethnic Hungarian minority might make it susceptible to pro-Russia propaganda from Hungary",
             time = "4 hours ago",
             author = "By Fahad Yassin",
             views = 472,

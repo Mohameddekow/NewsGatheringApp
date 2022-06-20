@@ -10,7 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.dekow.newsgatheringapp.presentation.deatils.DetailsScreen
 import com.dekow.newsgatheringapp.presentation.home.HomeScreen
+import com.dekow.newsgatheringapp.presentation.nav.SetUpHomeNavigation
+import com.dekow.newsgatheringapp.presentation.search.SearchNewsScreen
 import com.dekow.newsgatheringapp.ui.theme.NewsGatheringAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +28,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
 
-                    HomeScreen()
+                    val navController = rememberNavController()
+                    SetUpHomeNavigation(navController = navController)
 
                 }
             }
