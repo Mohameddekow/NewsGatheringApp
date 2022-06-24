@@ -114,25 +114,29 @@ fun NewsDetails(
                     )
                 }
 
-                Text(
-                    text = data.title,
-                    modifier = Modifier
-                        .padding(bottom = 5.dp, end = 5.dp)
-                        .fillMaxWidth(0.9f),
-                    textAlign = TextAlign.Start,
-                    fontSize = MaterialTheme.typography.h5.fontSize,
-                    color = Color.White,
-                    maxLines = 3,
-                    fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                data.title?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier
+                            .padding(bottom = 5.dp, end = 5.dp)
+                            .fillMaxWidth(0.9f),
+                        textAlign = TextAlign.Start,
+                        fontSize = MaterialTheme.typography.h5.fontSize,
+                        color = Color.White,
+                        maxLines = 3,
+                        fontWeight = FontWeight.Bold,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
 
-                Text(
-                    text = data.desc,
-                    modifier = Modifier
-                        .padding(end = 5.dp,  top = 3.dp, bottom = 10.dp),
-                    color = Color.White,
-                )
+                data.desc?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier
+                            .padding(end = 5.dp,  top = 3.dp, bottom = 10.dp),
+                        color = Color.White,
+                    )
+                }
 
             }
 
@@ -245,23 +249,27 @@ fun NewsDetails(
                 }
 
                 //headline
-                Text(
-                    text = data.title,
-                    modifier = Modifier.padding(bottom = 15.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.h5.fontSize,
-                    textAlign = TextAlign.Start
-                )
+                data.title?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier.padding(bottom = 15.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.h5.fontSize,
+                        textAlign = TextAlign.Start
+                    )
+                }
 
 
                 //the whole news
-                Text(
-                    text = data.desc,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .alpha(0.7f),
-                    textAlign = TextAlign.Start
-                )
+                data.desc?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .alpha(0.7f),
+                        textAlign = TextAlign.Start
+                    )
+                }
             }
 
         }
@@ -271,9 +279,3 @@ fun NewsDetails(
     }
 }
 
-
-@Preview
-@Composable
-fun DetailsPrev() {
-    DetailsScreen(navController = rememberNavController())
-}

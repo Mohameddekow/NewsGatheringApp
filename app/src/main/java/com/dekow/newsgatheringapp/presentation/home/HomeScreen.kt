@@ -22,11 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.commons.DammyData
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
@@ -136,18 +134,20 @@ fun NewsOfTheDay(
                 )
             }
 
-            Text(
-                text = data.desc,
-                modifier = Modifier
-                    .padding(bottom = 15.dp, end = 5.dp)
-                    .fillMaxWidth(0.9f),
-                textAlign = TextAlign.Start,
-                fontSize = MaterialTheme.typography.h5.fontSize,
-                color = Color.White,
-                maxLines = 3,
-                fontWeight = FontWeight.Bold,
-                overflow = TextOverflow.Ellipsis,
-            )
+            data.desc?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier
+                        .padding(bottom = 15.dp, end = 5.dp)
+                        .fillMaxWidth(0.9f),
+                    textAlign = TextAlign.Start,
+                    fontSize = MaterialTheme.typography.h5.fontSize,
+                    color = Color.White,
+                    maxLines = 3,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
 
             Row (modifier = Modifier
                 .padding(bottom = 15.dp, top = 5.dp),
@@ -243,7 +243,7 @@ fun BreakingNews(
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(dataList) { news ->
-                NewsRowItem(newsItem = news)
+                NewsRowItem(newsItemTest = news)
             }
         }
 
@@ -253,54 +253,56 @@ fun BreakingNews(
 
 @Composable
 fun NewsRowItem(
-    newsItem: NewsItem
+    newsItemTest: NewsItem
 ) {
     Column(
         modifier = Modifier
     ) {
-        Image(
-            painter = painterResource(id = newsItem.image),
-            contentDescription = "newsImage",
-            modifier = Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .width(180.dp)
-                .height(120.dp)
-        )
+        newsItemTest.imageInt?.let { painterResource(id = it) }?.let {
+            Image(
+                painter = it,
+                contentDescription = "newsImage",
+                modifier = Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .width(180.dp)
+                    .height(120.dp)
+            )
+        }
 
-        Text(
-            text = newsItem.desc,
-            modifier = Modifier
-                .padding(top = 7.dp)
-                .width(160.dp),
-            textAlign = TextAlign.Start,
-            fontWeight = FontWeight.Bold,
-            fontSize = 17.sp,
-            maxLines = 4,
-            overflow = TextOverflow.Ellipsis,
-        )
+        newsItemTest.desc?.let {
+            Text(
+                text = it,
+                modifier = Modifier
+                    .padding(top = 7.dp)
+                    .width(160.dp),
+                textAlign = TextAlign.Start,
+                fontWeight = FontWeight.Bold,
+                fontSize = 17.sp,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
 
-        Text(
-            text = newsItem.time,
-            modifier = Modifier
-                .alpha(0.6f)
-                .padding(top = 6.dp),
-            textAlign = TextAlign.Start,
-        )
+        newsItemTest.time?.let {
+            Text(
+                text = it,
+                modifier = Modifier
+                    .alpha(0.6f)
+                    .padding(top = 6.dp),
+                textAlign = TextAlign.Start,
+            )
+        }
 
-        Text(
-            text = newsItem.author,
-            modifier = Modifier
-                .alpha(0.6f)
-                .padding(top = 6.dp),
-            textAlign = TextAlign.Start,
-        )
+        newsItemTest.author?.let {
+            Text(
+                text = it,
+                modifier = Modifier
+                    .alpha(0.6f)
+                    .padding(top = 6.dp),
+                textAlign = TextAlign.Start,
+            )
+        }
     }
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun HomePev() {
-    NewsOfTheDay(navController = rememberNavController())
-    BreakingNews(navController = rememberNavController())
-}

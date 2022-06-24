@@ -1,10 +1,14 @@
 package com.dekow.newsgatheringapp.domain.model
 
+import com.dekow.newsgatheringapp.R
+
 data class NewsItem(
-    val image : Int,
-    val title: String,
-    val desc: String,
-    val time: String,
-    val author: String,
-    val views: Int,
+    val image: String? = null,
+    val imageInt: Int? = R.drawable.newimageplaceholder,
+    val title:  String? = null,
+    val desc:  String? = null,
+    val time: String? = null,
+    val author:  String? = null,
+    val ratings:  String? = null,
+    val sourcePublication: String? = null
 )

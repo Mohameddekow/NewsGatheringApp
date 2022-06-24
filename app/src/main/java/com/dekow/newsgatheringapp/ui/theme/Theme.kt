@@ -46,6 +46,7 @@ fun NewsGatheringAppTheme(
         LightColorPalette
     }
 
+//    val systemUiController = rememberSy
     MaterialTheme(
         colors = colors,
         typography = Typography,

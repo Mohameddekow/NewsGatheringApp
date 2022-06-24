@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.dekow.newsgatheringapp"
@@ -93,6 +93,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.0-rc01"
     implementation "androidx.navigation:navigation-compose:2.5.0-rc01" //nav in compose
     implementation "com.google.accompanist:accompanist-flowlayout:0.17.0"
+   // implementation "com.google.accompanist:accompanist-systemuicontroller:$compose_version"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.24.11-rc"
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1'

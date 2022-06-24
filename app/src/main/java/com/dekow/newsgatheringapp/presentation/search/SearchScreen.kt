@@ -1,5 +1,6 @@
 package com.dekow.newsgatheringapp.presentation.search
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,43 +25,47 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
 import com.dekow.newsgatheringapp.domain.model.NewsCategoryItem
 import com.dekow.newsgatheringapp.domain.model.NewsItem
 import com.dekow.newsgatheringapp.presentation.home.HomeBottomMenu
-import com.dekow.newsgatheringapp.presentation.home.data
-import com.dekow.newsgatheringapp.presentation.home.dataList
 import com.dekow.newsgatheringapp.presentation.screen.Screens
+import com.dekow.newsgatheringapp.presentation.search.use_case.SearchNewsViewModel
 import com.dekow.newsgatheringapp.ui.theme.*
 
-val myItemsList = listOf<NewsCategoryItem>(
-    NewsCategoryItem("Technology"),
-    NewsCategoryItem("Health"),
-    NewsCategoryItem("Politics"),
-    NewsCategoryItem("Football"),
-    NewsCategoryItem("Science"),
-    NewsCategoryItem("Food")
-)
+
 @Composable
 fun SearchNewsScreen(
     navController: NavHostController
 ) {
+
+    val searchNewsViewModel: SearchNewsViewModel = hiltViewModel()
+
+    val state =  searchNewsViewModel.newsListState.value
+
+    Log.d("newsItem", state.news.toString())
+
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
         ) {
-            SearchNews(navController = navController)
-            NewCategory(myItems = myItemsList)
+            SearchNewsBar(navController = navController)
+            state.news?.let { NewCategoryColumn(searchNewsItem = it) }
         }
+
         HomeBottomMenu(
             navController = navController,
             items = listOf(
@@ -72,11 +76,29 @@ fun SearchNewsScreen(
             modifier = Modifier.align(Alignment.BottomCenter),
             selectedItemIndex = 1
         )
+
+
+        // error or loading state
+        if(state.error.isNotBlank()) {
+            Text(
+                text = state.error,
+                color = MaterialTheme.colors.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+                    .align(Alignment.Center)
+            )
+        }
+        if(state.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+
     }
 }
 
 @Composable
-fun SearchNews(
+fun SearchNewsBar(
     navController: NavHostController
 ) {
     var searchQuery by remember {
@@ -92,11 +114,11 @@ fun SearchNews(
             .padding(start = 15.dp, top = 35.dp)
             .size(36.dp)
             .clickable {
-               navController.navigate(Screens.ProfileScreen.route){
-                   popUpTo(Screens.ProfileScreen.route){
-                       inclusive = true
-                   }
-               }
+                navController.navigate(Screens.ProfileScreen.route) {
+                    popUpTo(Screens.ProfileScreen.route) {
+                        inclusive = true
+                    }
+                }
             },
         tint = if (!darkTheme) Color.Black else PurpleWhite,
     )
@@ -171,8 +193,8 @@ fun SearchNews(
 }
 
 @Composable
-fun NewCategory(
-    myItems: List<NewsCategoryItem>
+fun NewCategoryColumn(
+    searchNewsItem: List<NewsItem>
 ) {
     Column(
         modifier = Modifier
@@ -182,24 +204,24 @@ fun NewCategory(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        val myItemsList = listOf<NewsCategoryItem>(
-            NewsCategoryItem("Technology"),
+        val newsItemsCategoryList = listOf(
+            NewsCategoryItem("Food"),
             NewsCategoryItem("Health"),
-            NewsCategoryItem("Politics"),
+            NewsCategoryItem("Technology"),
             NewsCategoryItem("Football"),
+            NewsCategoryItem("Politics"),
             NewsCategoryItem("Science"),
-            NewsCategoryItem("Food")
         )
 
         //news category row
-        NewsCategoryRowItem(myItemsList)
+        NewsCategoryRowItem(newsItemsCategoryList)
 
         LazyColumn(
-            contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 30.dp),
+            contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp)
         ){
-            items(dataList){ news ->
-                NewsListItem(newsItemList = news)
+            items(searchNewsItem){ news ->
+                NewsListItem(searchNewsItem = news)
             }
         }
 
@@ -210,7 +232,7 @@ fun NewCategory(
 
 @Composable
 fun NewsListItem(
-    newsItemList: NewsItem
+    searchNewsItem: NewsItem
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -219,39 +241,56 @@ fun NewsListItem(
     ) {
 
         Image(
-            painter = painterResource(id = newsItemList.image),
-            contentDescription = data.title,
+            painter = rememberAsyncImagePainter(searchNewsItem.image),
+            contentDescription = searchNewsItem.title,
             modifier = Modifier
                 .clip(RoundedCornerShape(7.dp))
-                .size(height = 90.dp, width = 120.dp),
+                .size(height = 94.dp, width = 120.dp),
             contentScale = ContentScale.FillBounds
         )
 
         Column(
             modifier = Modifier
                 .padding(start = 7.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top,
         ) {
 
-            Text(
-                text = newsItemList.title,
-                modifier = Modifier.padding(start = 4.dp, top = 3.dp),
-                fontWeight = FontWeight.Bold,
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
+            //news headline
+            searchNewsItem.title?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier.padding(start = 4.dp, top = 1.dp),
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
+            //published on
+            searchNewsItem.time?.let {
+                Text(text = it, modifier = Modifier.alpha(0.6f).padding(start = 4.dp, top = 3.dp))
+            }
+
+            //source and the author
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 4.dp, top = 8.dp, bottom = 3.dp),
+                    .padding(start = 4.dp, top = 2.dp, bottom = 3.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Text(text = "3 hours ago", modifier = Modifier.alpha(0.6f))
-                Text(text = "by Fahad yassin", modifier = Modifier
-                    .alpha(0.6f)
-                    .padding(end = 20.dp))
+
+                //source
+                searchNewsItem.sourcePublication?.let {
+                    Text(text = it, modifier = Modifier.alpha(0.6f))
+                }
+
+                //author
+                searchNewsItem.author.let {
+                    Text(text = it?: " ", modifier = Modifier
+                        .alpha(0.6f)
+                        .padding(end = 20.dp))
+                }
             }
         }
     }
@@ -268,64 +307,64 @@ fun NewsCategoryRowItem(
     val darkTheme: Boolean = isSystemInDarkTheme()
 
 
-    LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        contentPadding = PaddingValues(4.dp)
-    ){
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            contentPadding = PaddingValues(4.dp)
+        ){
 
-        items(newsCategoryItemChips.size) {
+            items(newsCategoryItemChips.size) {
 
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { selectedItemIndex = it }
-                    .padding(start = 2.dp, top = 3.dp, bottom = 3.dp)
-            ) {
-                //the row item
-                Text(
-                    text = newsCategoryItemChips[it].title,
-                    modifier = Modifier.padding(end = 5.dp, top = 5.dp, bottom = 5.dp, start = 0.dp),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.h5.fontSize,
-
-                    color = if (!darkTheme) {
-                        if (selectedItemIndex == it) Color.Black else NewCategoryInActiveItemColor
-                    } else if (darkTheme) {
-                        if (selectedItemIndex == it) Color.White else Color.White.copy(alpha = 0.5f)
-                    } else {
-                        DetailsItemBackgroundWhite
-                    },
-
-                )
-
-                //underline text
-                Text(
-                    text = newsCategoryItemChips[it].title,
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(48))
-                        .height(3.dp)
-                        .background(
-                        color =
-                            if (!darkTheme) {
-                                if (selectedItemIndex == it) Color.Black else Color.Transparent
-                            } else if (darkTheme) {
-                                if (selectedItemIndex == it) Color.White else Color.Transparent
-                            } else {
-                                DetailsItemBackgroundWhite
-                            }
-                    ),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.h5.fontSize,
-                )
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { selectedItemIndex = it }
+                        .padding(start = 2.dp, top = 3.dp, bottom = 3.dp)
+                ) {
+                    //the row item
+                    Text(
+                        text = newsCategoryItemChips[it].title,
+                        modifier = Modifier.padding(end = 5.dp, top = 5.dp, bottom = 5.dp, start = 0.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.h5.fontSize,
+
+                        color = if (!darkTheme) {
+                            if (selectedItemIndex == it) Color.Black else NewCategoryInActiveItemColor
+                        } else if (darkTheme) {
+                            if (selectedItemIndex == it) Color.White else Color.White.copy(alpha = 0.5f)
+                        } else {
+                            DetailsItemBackgroundWhite
+                        },
+
+                        )
+
+                    //underline text
+                    Text(
+                        text = newsCategoryItemChips[it].title,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(48))
+                            .height(3.dp)
+                            .background(
+                                color =
+                                if (!darkTheme) {
+                                    if (selectedItemIndex == it) Color.Black else Color.Transparent
+                                } else if (darkTheme) {
+                                    if (selectedItemIndex == it) Color.White else Color.Transparent
+                                } else {
+                                    DetailsItemBackgroundWhite
+                                }
+                            ),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = MaterialTheme.typography.h5.fontSize,
+                    )
+                }
+
 
             }
 
-
         }
-    }
 
 
 }

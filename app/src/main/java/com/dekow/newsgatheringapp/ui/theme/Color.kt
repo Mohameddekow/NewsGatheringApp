@@ -25,6 +25,8 @@ val LightModeBackgroundWhite = Color(0xFFE6E4E4)
 val ListItemBackgroundWhite = Color(0xEEF3F1F1)
 val DetailsItemBackgroundWhite = Color(0x86B3B1B1)
 
+val StatusBarLightModeColor = Color(0x86858484)
+
 //bottom menu items color
 val ActiveItemColorInLightMode = Color(0x869B9999)
 val ActiveItemColorInDarkMode = Color(0xFFE6E4E4)

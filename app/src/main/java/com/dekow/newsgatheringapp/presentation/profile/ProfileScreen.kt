@@ -6,8 +6,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,18 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
-import com.dekow.newsgatheringapp.domain.model.NewsItem
 import com.dekow.newsgatheringapp.presentation.home.HomeBottomMenu
 import com.dekow.newsgatheringapp.presentation.home.HomeScreen
 import com.dekow.newsgatheringapp.presentation.home.data
 import com.dekow.newsgatheringapp.presentation.screen.Screens
-import com.dekow.newsgatheringapp.ui.theme.DetailsItemBackgroundWhite
 import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
-import com.dekow.newsgatheringapp.ui.theme.Purple200
 
 
 @Composable
@@ -39,27 +33,22 @@ fun ProfileScreen(
 ) {
     val darkTheme: Boolean = isSystemInDarkTheme()
 
-
     Box(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
 
+        //profile navigation box
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .background(color = if (!darkTheme) LightModeBackgroundWhite else Color.Black)
-                .padding(top = 10.dp, start = 10.dp)
-                .border(
-                    0.6.dp,
-                    color = Purple200,
-                    shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-                )
+                .fillMaxSize()
         ) {
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start,
             ) {
+                //user profile
                 ProfileItem(navController = navController)
 
                 RowItems(title = "My Location", icon = R.drawable.ic_round_location_on_24, modifier = Modifier)
@@ -67,9 +56,9 @@ fun ProfileScreen(
                 RowItems(title = "Help", icon = R.drawable.ic_round_help_outline_24, modifier = Modifier)
                 RowItems(title = "Support", icon = R.drawable.ic_round_call_24, modifier = Modifier)
 
-
             }
 
+            //sing out row
             RowItems(
                 title = "Signout",
                 icon = R.drawable.ic_icons8_share_3__1_,
@@ -79,21 +68,49 @@ fun ProfileScreen(
             )
         }
 
+        //place holder box
+        Box(
+            modifier = Modifier
+                .padding(start = 290.dp)
+                //.fillMaxSize()
+                .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
+                .fillMaxHeight(0.65f)
+                .background(Color.Blue)
+                .alpha(1f)
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Gray)
+            ) {
 
-            HomeBottomMenu(
-                navController = navController,
-                items = listOf(
-                    HomeBottomMenuItem(title = "home", iconId = R.drawable.ic_icons8_home_48),
-                    HomeBottomMenuItem(title = "search", iconId = R.drawable.ic_icons8_search_50),
-                    HomeBottomMenuItem(title = "person", iconId = R.drawable.ic_icons8_contacts_32)
-                ),
-                modifier = Modifier.align(Alignment.BottomCenter),
-                selectedItemIndex = 2
-            )
+            }
         }
 
+        //home screen background box
+        Box(
+            modifier = Modifier
+                .padding(start = 300.dp)
+                .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
+                //.fillMaxSize()
+                .fillMaxHeight(0.7f)
+                .background(Color.LightGray)
+        ) {
+            HomeScreen(navController = navController)
+        }
 
-
+        //profile home button menu
+        HomeBottomMenu(
+            navController = navController,
+            items = listOf(
+                HomeBottomMenuItem(title = "home", iconId = R.drawable.ic_icons8_home_48),
+                HomeBottomMenuItem(title = "search", iconId = R.drawable.ic_icons8_search_50),
+                HomeBottomMenuItem(title = "person", iconId = R.drawable.ic_icons8_contacts_32)
+            ),
+            modifier = Modifier.align(Alignment.BottomCenter),
+            selectedItemIndex = 2
+        )
+    }
 
 }
 
@@ -118,15 +135,16 @@ fun ProfileItem(
             verticalAlignment = Alignment.Top,
         ) {
 
-
-            Image(
-                painter = painterResource(id = data.image),
-                contentDescription = "profile image",
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .size(60.dp),
-                contentScale = ContentScale.FillBounds
-            )
+            data.imageInt?.let { painterResource(id = it) }?.let {
+                Image(
+                    painter = it,
+                    contentDescription = "profile image",
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .size(60.dp),
+                    contentScale = ContentScale.FillBounds
+                )
+            }
 
             Column(
                 modifier = Modifier
@@ -186,37 +204,5 @@ fun RowItems(
     ) {
         Icon(painter = painterResource(id = icon), contentDescription = "location", Modifier.size(25.dp))
         Text(text = title, modifier = Modifier.padding(start = 10.dp))
-    }
-}
-
-
-
-@Composable
-fun HomeScreenBoxContainer(
-    modifier: Modifier = Modifier,
-    navController: NavHostController
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-            .fillMaxHeight(0.8f)
-            //.fillMaxWidth(0.3f)
-    ) {
-        HomeScreen(navController = navController)
-    }
-}
-@Composable
-fun PlaceHolderBox(
-    modifier: Modifier = Modifier
-
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
-            .background(Color.Blue)
-            .fillMaxHeight(0.8f)
-            //.fillMaxWidth(0.4f)
-    ) {
-
     }
 }
