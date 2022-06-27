@@ -2,8 +2,10 @@ package com.dekow.newsgatheringapp.presentation.search.use_case
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dekow.newsgatheringapp.commons.Constants.SECTION_NAME
 import com.dekow.newsgatheringapp.commons.Resource
 import com.dekow.newsgatheringapp.presentation.states.NewsState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,20 +18,28 @@ import javax.inject.Inject
 class SearchNewsViewModel
     @Inject
     constructor(
-        val searchUseCase: SearchUseCase
+        private val searchUseCase: SearchUseCase,
+        savedStateHandle: SavedStateHandle
     ): ViewModel()
 {
 
     private val _newsListState = mutableStateOf(NewsState())
     val newsListState: State<NewsState> = _newsListState
 
+    private val _sectionNews = mutableStateOf(NewsState())
+    val sectionNewsState: State<NewsState> = _sectionNews
+
     init {
-        searchNews()
+
+        savedStateHandle.get<String>(SECTION_NAME)?.let { section ->
+            searchNews(section)
+
+        }
     }
 
-    private fun searchNews() {
+    private fun searchNews(query: String) {
 
-        searchUseCase().onEach { result ->
+        searchUseCase(query).onEach { result ->
             when (result) {
                 is Resource.Success -> {
                     _newsListState.value = NewsState(news = result.data ?: emptyList())
@@ -47,5 +57,4 @@ class SearchNewsViewModel
 
 
     }
-
 }

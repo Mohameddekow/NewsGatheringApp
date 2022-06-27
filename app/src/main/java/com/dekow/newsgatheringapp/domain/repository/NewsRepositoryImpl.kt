@@ -1,8 +1,9 @@
 package com.dekow.newsgatheringapp.domain.repository
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.dekow.newsgatheringapp.data.remote.GuardiansNewsApi
-import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.test.GuardianMain
-import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.wait.GuardianMainT
+import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto.GuardianMain
 import javax.inject.Inject
 
 class NewsRepositoryImpl
@@ -12,8 +13,19 @@ constructor(
 ): NewsRepository {
 
 
-    override suspend fun searchNews(): GuardianMain {
-        return guardiansNewsApi.searchNews()
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getNewsOfSpecificSection(query: String): GuardianMain {
+        return guardiansNewsApi.getNewsOfSpecificSection(query = query)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getBreakingNews(query: String): GuardianMain {
+        return guardiansNewsApi.getBreakingNews(query = query)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun getBreakingNewsList(query: String): GuardianMain {
+        return guardiansNewsApi.getBreakingNewsList(query = query)
     }
 
 

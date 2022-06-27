@@ -94,6 +94,7 @@ fun ProfileScreen(
                 .clip(RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp))
                 //.fillMaxSize()
                 .fillMaxHeight(0.7f)
+//                .clickable(enabled = false, onClickLabel = "hh", null, onClick = {})
                 .background(Color.LightGray)
         ) {
             HomeScreen(navController = navController)

@@ -129,7 +129,7 @@ fun NewsDetails(
                     )
                 }
 
-                data.desc?.let {
+                data.headline?.let {
                     Text(
                         text = it,
                         modifier = Modifier
@@ -261,7 +261,7 @@ fun NewsDetails(
 
 
                 //the whole news
-                data.desc?.let {
+                data.headline?.let {
                     Text(
                         text = it,
                         modifier = Modifier

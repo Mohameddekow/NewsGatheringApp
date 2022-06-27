@@ -1,14 +1,14 @@
 package com.dekow.newsgatheringapp.presentation.search
 
-import android.util.Log
-import androidx.compose.foundation.Image
+
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -19,52 +19,70 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
+import androidx.navigation.compose.rememberNavController
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
-import com.dekow.newsgatheringapp.domain.model.NewsCategoryItem
-import com.dekow.newsgatheringapp.domain.model.NewsItem
+import com.dekow.newsgatheringapp.domain.model.NewsSectionItem
 import com.dekow.newsgatheringapp.presentation.home.HomeBottomMenu
+import com.dekow.newsgatheringapp.presentation.nav.SetUpNewsSectionNavigation
 import com.dekow.newsgatheringapp.presentation.screen.Screens
-import com.dekow.newsgatheringapp.presentation.search.use_case.SearchNewsViewModel
-import com.dekow.newsgatheringapp.ui.theme.*
+import com.dekow.newsgatheringapp.presentation.screen.SectionScreens
+import com.dekow.newsgatheringapp.presentation.search.sections.section_tabs.SectionTabScreen
+import com.dekow.newsgatheringapp.presentation.search.sections.using_lazyrow.NewsSectionRowItem
+import com.dekow.newsgatheringapp.ui.theme.DetailsItemBackgroundWhite
+import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
+import com.dekow.newsgatheringapp.ui.theme.NewCategoryInActiveItemColor
+import com.dekow.newsgatheringapp.ui.theme.PurpleWhite
 
+val newsItemsSectionList = listOf(
+    NewsSectionItem("Food"),
+    NewsSectionItem("Health"),
+    NewsSectionItem("Technology"),
+    NewsSectionItem("Football"),
+    NewsSectionItem("Politics"),
+    NewsSectionItem("Science"),
+)
 
 @Composable
 fun SearchNewsScreen(
     navController: NavHostController
 ) {
 
-    val searchNewsViewModel: SearchNewsViewModel = hiltViewModel()
-
-    val state =  searchNewsViewModel.newsListState.value
-
-    Log.d("newsItem", state.news.toString())
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+
 
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top,
         ) {
+
             SearchNewsBar(navController = navController)
-            state.news?.let { NewCategoryColumn(searchNewsItem = it) }
+
+            Column(
+                modifier = Modifier
+                    .padding(top = 20.dp, start = 15.dp, end = 15.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+
+                SectionTabScreen()
+
+            }
+
         }
+
 
         HomeBottomMenu(
             navController = navController,
@@ -77,22 +95,6 @@ fun SearchNewsScreen(
             selectedItemIndex = 1
         )
 
-
-        // error or loading state
-        if(state.error.isNotBlank()) {
-            Text(
-                text = state.error,
-                color = MaterialTheme.colors.error,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .align(Alignment.Center)
-            )
-        }
-        if(state.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        }
 
     }
 }
@@ -108,25 +110,23 @@ fun SearchNewsBar(
     val darkTheme: Boolean = isSystemInDarkTheme()
 
     Icon(
-        painter = painterResource(id = R.drawable.ic_icons8_menu_60),
+        painter = painterResource(id = R.drawable.ic_icons8_news__1_),
         contentDescription = "menu",
         modifier = Modifier
-            .padding(start = 15.dp, top = 35.dp)
+            .padding(start = 15.dp, top = 35.dp, bottom = 60.dp,)
             .size(36.dp)
-            .clickable {
-                navController.navigate(Screens.ProfileScreen.route) {
-                    popUpTo(Screens.ProfileScreen.route) {
-                        inclusive = true
-                    }
-                }
-            },
+            .scrollable(
+                state = rememberScrollState(),
+                orientation = Orientation.Vertical
+            )
+            .clickable {},
         tint = if (!darkTheme) Color.Black else PurpleWhite,
     )
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 15.dp, end = 15.dp, top = 70.dp, bottom = 20.dp),
+            .padding(start = 15.dp, end = 15.dp, bottom = 2.dp),
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
@@ -144,16 +144,12 @@ fun SearchNewsBar(
 
         OutlinedTextField(
             value = searchQuery,
-            onValueChange = {
-                searchQuery = it
-            },
+            onValueChange = { searchQuery = it },
             modifier = Modifier
                 .clip(RoundedCornerShape(7))
                 .fillMaxWidth(0.99f)
                 .background(color = if (!darkTheme) DetailsItemBackgroundWhite else LightModeBackgroundWhite),
-
             textStyle = TextStyle(color = if (darkTheme) Color.Black else Color.Black, fontSize = 20.sp),
-
             placeholder = { Text(
                 text = "Search",
                 modifier = Modifier.alpha(0.6f),
@@ -189,182 +185,10 @@ fun SearchNewsBar(
                 }
             )
         )
-    }
-}
-
-@Composable
-fun NewCategoryColumn(
-    searchNewsItem: List<NewsItem>
-) {
-    Column(
-        modifier = Modifier
-            .padding(top = 20.dp, start = 15.dp, end = 15.dp)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-
-        val newsItemsCategoryList = listOf(
-            NewsCategoryItem("Food"),
-            NewsCategoryItem("Health"),
-            NewsCategoryItem("Technology"),
-            NewsCategoryItem("Football"),
-            NewsCategoryItem("Politics"),
-            NewsCategoryItem("Science"),
-        )
-
-        //news category row
-        NewsCategoryRowItem(newsItemsCategoryList)
-
-        LazyColumn(
-            contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
-            verticalArrangement = Arrangement.spacedBy(7.dp)
-        ){
-            items(searchNewsItem){ news ->
-                NewsListItem(searchNewsItem = news)
-            }
-        }
 
     }
 }
 
 
 
-@Composable
-fun NewsListItem(
-    searchNewsItem: NewsItem
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.Top,
-    ) {
 
-        Image(
-            painter = rememberAsyncImagePainter(searchNewsItem.image),
-            contentDescription = searchNewsItem.title,
-            modifier = Modifier
-                .clip(RoundedCornerShape(7.dp))
-                .size(height = 94.dp, width = 120.dp),
-            contentScale = ContentScale.FillBounds
-        )
-
-        Column(
-            modifier = Modifier
-                .padding(start = 7.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top,
-        ) {
-
-            //news headline
-            searchNewsItem.title?.let {
-                Text(
-                    text = it,
-                    modifier = Modifier.padding(start = 4.dp, top = 1.dp),
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            //published on
-            searchNewsItem.time?.let {
-                Text(text = it, modifier = Modifier.alpha(0.6f).padding(start = 4.dp, top = 3.dp))
-            }
-
-            //source and the author
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 4.dp, top = 2.dp, bottom = 3.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-
-                //source
-                searchNewsItem.sourcePublication?.let {
-                    Text(text = it, modifier = Modifier.alpha(0.6f))
-                }
-
-                //author
-                searchNewsItem.author.let {
-                    Text(text = it?: " ", modifier = Modifier
-                        .alpha(0.6f)
-                        .padding(end = 20.dp))
-                }
-            }
-        }
-    }
-}
-
-
-@Composable
-fun NewsCategoryRowItem(
-    newsCategoryItemChips: List<NewsCategoryItem>
-) {
-    var selectedItemIndex by remember {
-        mutableStateOf(0)
-    }
-    val darkTheme: Boolean = isSystemInDarkTheme()
-
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            contentPadding = PaddingValues(4.dp)
-        ){
-
-            items(newsCategoryItemChips.size) {
-
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { selectedItemIndex = it }
-                        .padding(start = 2.dp, top = 3.dp, bottom = 3.dp)
-                ) {
-                    //the row item
-                    Text(
-                        text = newsCategoryItemChips[it].title,
-                        modifier = Modifier.padding(end = 5.dp, top = 5.dp, bottom = 5.dp, start = 0.dp),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = MaterialTheme.typography.h5.fontSize,
-
-                        color = if (!darkTheme) {
-                            if (selectedItemIndex == it) Color.Black else NewCategoryInActiveItemColor
-                        } else if (darkTheme) {
-                            if (selectedItemIndex == it) Color.White else Color.White.copy(alpha = 0.5f)
-                        } else {
-                            DetailsItemBackgroundWhite
-                        },
-
-                        )
-
-                    //underline text
-                    Text(
-                        text = newsCategoryItemChips[it].title,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(48))
-                            .height(3.dp)
-                            .background(
-                                color =
-                                if (!darkTheme) {
-                                    if (selectedItemIndex == it) Color.Black else Color.Transparent
-                                } else if (darkTheme) {
-                                    if (selectedItemIndex == it) Color.White else Color.Transparent
-                                } else {
-                                    DetailsItemBackgroundWhite
-                                }
-                            ),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = MaterialTheme.typography.h5.fontSize,
-                    )
-                }
-
-
-            }
-
-        }
-
-
-}

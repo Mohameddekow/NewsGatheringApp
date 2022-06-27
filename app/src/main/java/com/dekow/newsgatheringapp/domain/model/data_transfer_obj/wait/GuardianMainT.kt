@@ -12,7 +12,7 @@ fun GuardianMainT.mapToNews(): List<NewsItem> {
         NewsItem(
             image = result.fieldsT.thumbnail,
             title = result.webTitle,
-            desc = result.fieldsT.htmlBody,
+            headline = result.fieldsT.htmlBody,
             time = result.webPublicationDate,
             author = "by ${result.fieldsT.publication}",
             ratings = result.id

@@ -1,4 +1,4 @@
-package com.dekow.newsgatheringapp.domain.model.data_transfer_obj.test
+package com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto
 
 
 data class GuardianResponse(

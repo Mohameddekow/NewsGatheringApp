@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
 import com.dekow.newsgatheringapp.presentation.screen.Screens
@@ -63,25 +64,33 @@ fun HomeBottomMenu(
                     itemIsSelected = index == selectedItemIndex
                 ){
                     selectedItemIndex = index
+
                     when (selectedItemIndex) {
                         0 -> {
                             navController.navigate(Screens.HomeScreen.route){
+                                launchSingleTop = true
+
                                 popUpTo(Screens.HomeScreen.route){
                                     inclusive = true
                                 }
                             }
                         }
                         1 -> {
-                            navController.navigate(Screens.SearchScreen.route){
-                                popUpTo(Screens.SearchScreen.route){
-                                    inclusive = true
+                            navController.navigate(Screens.SearchScreen.route ){
+                                launchSingleTop = true
+
+                                popUpTo(Screens.HomeScreen.route ){
+                                    inclusive = false
                                 }
                             }
                         }
                         else -> {
                             navController.navigate(Screens.ProfileScreen.route){
-                                popUpTo(Screens.ProfileScreen.route){
-                                    inclusive = true
+
+                                launchSingleTop = true
+
+                                popUpTo(Screens.HomeScreen.route){
+                                    inclusive = false
                                 }
                             }
                         }

@@ -22,6 +22,7 @@ import com.dekow.newsgatheringapp.ui.theme.NewsGatheringAppTheme
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.animation.navigation
 import androidx.navigation.compose.rememberNavController
+import com.dekow.newsgatheringapp.presentation.nav.SetUpNewsSectionNavigation
 import com.dekow.newsgatheringapp.ui.theme.DetailsItemBackgroundWhite
 import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
 import com.dekow.newsgatheringapp.ui.theme.StatusBarLightModeColor
@@ -48,6 +49,9 @@ class MainActivity : ComponentActivity() {
 
                     //setup app navigation
                     SetUpHomeNavigation()
+
+                    //news section nav
+                    //SetUpNewsSectionNavigation()
 
                 }
             }
