@@ -4,8 +4,8 @@ package com.dekow.newsgatheringapp.data.remote
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.dekow.newsgatheringapp.commons.getCurrentDate
 import com.dekow.newsgatheringapp.commons.usersCurrentDate
+import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.details_dto.NewsDetailsResponse
 import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto.GuardianMain
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -14,6 +14,12 @@ interface GuardiansNewsApi {
 
 
     //?q=tag=film/film,tone/reviews&from-date=2010-01-01&show-tags=contributor&show-fields=starRating,headline,thumbnail,short-url&order-by=relevance&api-key=05f35298-d1c4-471a-8f7f-cc379945384a
+
+    @GET("/food/2022/jun/21/two-pints-of-lager-and-a-michelin-star-why-gastropubs-are-roaring-back")
+    suspend fun newsDetails(
+       // @Path("sectionId") sectionId: String
+    ): NewsDetailsResponse
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -37,7 +43,8 @@ interface GuardiansNewsApi {
     suspend fun getBreakingNews(
         @Query("section") query: String,
         @Query("page-size") pageSize: String = "20",
-        @Query("from-date") fromDate: String? =  usersCurrentDate,
+        @Query("from-date") fromDate: String? = "2022-06-26", // usersCurrentDate,
+        @Query("to-date") toDate: String? =  usersCurrentDate,//"2022-06-26",
         @Query("order-by") order: String = "newest",
         @Query("use-date") useDate: String = "published",
         @Query("show-tags") tags: String = "contributor",
@@ -59,6 +66,10 @@ interface GuardiansNewsApi {
         @Query("show-fields") fields: String = "all",
         @Query("format") format: String = "json",
     ): GuardianMain
+
+
+
+
 
 
 

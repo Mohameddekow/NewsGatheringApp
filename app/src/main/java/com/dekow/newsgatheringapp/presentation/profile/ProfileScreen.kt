@@ -1,6 +1,8 @@
 package com.dekow.newsgatheringapp.presentation.profile
 
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.home.HomeBottomMenu
 import com.dekow.newsgatheringapp.presentation.home.HomeScreen
 import com.dekow.newsgatheringapp.presentation.home.data
@@ -29,7 +32,9 @@ import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
 
 @Composable
 fun ProfileScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
+
 ) {
     val darkTheme: Boolean = isSystemInDarkTheme()
 
@@ -51,9 +56,21 @@ fun ProfileScreen(
                 //user profile
                 ProfileItem(navController = navController)
 
-                RowItems(title = "My Location", icon = R.drawable.ic_round_location_on_24, modifier = Modifier)
-                RowItems(title = "Settings", icon = R.drawable.ic_icons8_search_50, modifier = Modifier)
-                RowItems(title = "Help", icon = R.drawable.ic_round_help_outline_24, modifier = Modifier)
+                RowItems(
+                    title = "My Location",
+                    icon = R.drawable.ic_round_location_on_24,
+                    modifier = Modifier
+                )
+                RowItems(
+                    title = "Settings",
+                    icon = R.drawable.ic_icons8_search_50,
+                    modifier = Modifier
+                )
+                RowItems(
+                    title = "Help",
+                    icon = R.drawable.ic_round_help_outline_24,
+                    modifier = Modifier
+                )
                 RowItems(title = "Support", icon = R.drawable.ic_round_call_24, modifier = Modifier)
 
             }
@@ -97,8 +114,12 @@ fun ProfileScreen(
 //                .clickable(enabled = false, onClickLabel = "hh", null, onClick = {})
                 .background(Color.LightGray)
         ) {
-            HomeScreen(navController = navController)
+            HomeScreen(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
         }
+
 
         //profile home button menu
         HomeBottomMenu(
@@ -114,7 +135,6 @@ fun ProfileScreen(
     }
 
 }
-
 
 
 @Composable
@@ -136,16 +156,16 @@ fun ProfileItem(
             verticalAlignment = Alignment.Top,
         ) {
 
-            data.imageInt?.let { painterResource(id = it) }?.let {
-                Image(
-                    painter = it,
-                    contentDescription = "profile image",
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .size(60.dp),
-                    contentScale = ContentScale.FillBounds
-                )
-            }
+
+           Image(
+                painter = painterResource(id = R.drawable.moha_profile),
+                contentDescription = "profile image",
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .size(60.dp),
+                contentScale = ContentScale.Crop
+            )
+
 
             Column(
                 modifier = Modifier
@@ -154,27 +174,25 @@ fun ProfileItem(
             ) {
 
                 Text(
-                    text ="Mohamed Dekow",
-                    modifier = Modifier.padding( top = 3.dp),
+                    text = "Mohamed Dekow",
+                    modifier = Modifier.padding(top = 3.dp),
                     fontWeight = FontWeight.Bold,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Text(text = "mohadekow@gmail.com", modifier = Modifier
-                    .alpha(0.8f)
-                    .padding(end = 20.dp))
+                Text(
+                    text = "mohadekow@gmail.com", modifier = Modifier
+                        .alpha(0.8f)
+                        .padding(end = 20.dp)
+                )
             }
 
         }
 
 
         IconButton(onClick = {
-            navController.navigate(Screens.HomeScreen.route){
-                popUpTo(Screens.HomeScreen.route){
-                    inclusive = true
-                }
-            }
+            navController.popBackStack()
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_icons8_cancel_50),
@@ -202,8 +220,12 @@ fun RowItems(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
 
-    ) {
-        Icon(painter = painterResource(id = icon), contentDescription = "location", Modifier.size(25.dp))
+        ) {
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = "location",
+            Modifier.size(25.dp)
+        )
         Text(text = title, modifier = Modifier.padding(start = 10.dp))
     }
 }

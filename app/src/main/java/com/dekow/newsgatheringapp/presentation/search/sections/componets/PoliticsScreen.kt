@@ -12,15 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.search.sections.NewsSectionListItem
 import com.dekow.newsgatheringapp.presentation.search.sections.SectionsViewModel
 
 @Composable
-fun PoliticsSectionLazyColumn() {
+fun PoliticsSectionLazyColumn(
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
+) {
 
     val sectionsViewModel: SectionsViewModel = hiltViewModel()
 
-    val politicsState =  sectionsViewModel.politicsSectionsState.value
+    val politicsState = sectionsViewModel.politicsSectionsState.value
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -29,11 +34,16 @@ fun PoliticsSectionLazyColumn() {
         LazyColumn(
             contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp)
-        ){
+        ) {
 
             politicsState.news?.let {
-                items(it){ news ->
-                    NewsSectionListItem(searchNewsItem = news)
+                items(it) { news ->
+                    NewsSectionListItem(
+                        searchNewsItem = news,
+                        navController = navController,
+                        sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                    )
+
                 }
             }
 
@@ -41,7 +51,7 @@ fun PoliticsSectionLazyColumn() {
 
 
         // error or loading state
-        if(politicsState.error.isNotBlank()) {
+        if (politicsState.error.isNotBlank()) {
             Text(
                 text = politicsState.error,
                 color = MaterialTheme.colors.error,
@@ -52,8 +62,12 @@ fun PoliticsSectionLazyColumn() {
                     .align(Alignment.TopCenter)
             )
         }
-        if(politicsState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp))
+        if (politicsState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 20.dp)
+            )
         }
     }
 

@@ -1,14 +1,9 @@
 package com.dekow.newsgatheringapp.presentation.search
 
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,33 +22,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
-import com.dekow.newsgatheringapp.domain.model.NewsSectionItem
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.home.HomeBottomMenu
-import com.dekow.newsgatheringapp.presentation.nav.SetUpNewsSectionNavigation
-import com.dekow.newsgatheringapp.presentation.screen.Screens
-import com.dekow.newsgatheringapp.presentation.screen.SectionScreens
 import com.dekow.newsgatheringapp.presentation.search.sections.section_tabs.SectionTabScreen
-import com.dekow.newsgatheringapp.presentation.search.sections.using_lazyrow.NewsSectionRowItem
 import com.dekow.newsgatheringapp.ui.theme.DetailsItemBackgroundWhite
 import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
-import com.dekow.newsgatheringapp.ui.theme.NewCategoryInActiveItemColor
 import com.dekow.newsgatheringapp.ui.theme.PurpleWhite
+import com.google.accompanist.pager.ExperimentalPagerApi
 
-val newsItemsSectionList = listOf(
-    NewsSectionItem("Food"),
-    NewsSectionItem("Health"),
-    NewsSectionItem("Technology"),
-    NewsSectionItem("Football"),
-    NewsSectionItem("Politics"),
-    NewsSectionItem("Science"),
-)
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SearchNewsScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
 ) {
 
     Box(
@@ -77,9 +61,13 @@ fun SearchNewsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
-                SectionTabScreen()
+                SectionTabScreen(
+                    navController = navController,
+                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel,
+                )
 
             }
+
 
         }
 
@@ -113,13 +101,8 @@ fun SearchNewsBar(
         painter = painterResource(id = R.drawable.ic_icons8_news__1_),
         contentDescription = "menu",
         modifier = Modifier
-            .padding(start = 15.dp, top = 35.dp, bottom = 60.dp,)
-            .size(36.dp)
-            .scrollable(
-                state = rememberScrollState(),
-                orientation = Orientation.Vertical
-            )
-            .clickable {},
+            .padding(start = 15.dp, top = 35.dp, bottom = 60.dp)
+            .size(36.dp),
         tint = if (!darkTheme) Color.Black else PurpleWhite,
     )
 
@@ -149,12 +132,17 @@ fun SearchNewsBar(
                 .clip(RoundedCornerShape(7))
                 .fillMaxWidth(0.99f)
                 .background(color = if (!darkTheme) DetailsItemBackgroundWhite else LightModeBackgroundWhite),
-            textStyle = TextStyle(color = if (darkTheme) Color.Black else Color.Black, fontSize = 20.sp),
-            placeholder = { Text(
-                text = "Search",
-                modifier = Modifier.alpha(0.6f),
-                color = if (darkTheme) Color.Black else Color.Black
-            ) },
+            textStyle = TextStyle(
+                color = if (darkTheme) Color.Black else Color.Black,
+                fontSize = 20.sp
+            ),
+            placeholder = {
+                Text(
+                    text = "Search",
+                    modifier = Modifier.alpha(0.6f),
+                    color = if (darkTheme) Color.Black else Color.Black
+                )
+            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_icons8_search_50),
@@ -179,7 +167,7 @@ fun SearchNewsBar(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Search
             ),
-            keyboardActions = KeyboardActions (
+            keyboardActions = KeyboardActions(
                 onSearch = {
                     ///on Search
                 }
@@ -188,7 +176,3 @@ fun SearchNewsBar(
 
     }
 }
-
-
-
-
