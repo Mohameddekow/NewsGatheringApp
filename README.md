@@ -32,6 +32,7 @@ Finally, rebuild the project for changes to take effect and don't forget to upda
 ---
 # Tech Stack
 
+- [Kotlin](https://kotlinlang.org/) - Kotlin is a programming language that can run on JVM.
 
 - [Jetpack Components](https://developer.android.com/jetpack)
     - [Jetpack Compose](https://developer.android.com/jetpack/compose)- Modern toolkit for building native UI.
