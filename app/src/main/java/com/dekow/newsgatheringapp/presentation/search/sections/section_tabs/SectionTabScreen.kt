@@ -1,28 +1,27 @@
 package com.dekow.newsgatheringapp.presentation.search.sections.section_tabs
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.dekow.newsgatheringapp.R
+import androidx.navigation.NavHostController
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
+import com.dekow.newsgatheringapp.presentation.search.sections.componets.*
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
-
-//val darkTheme: Boolean = isSystemInDarkTheme()
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @OptIn(ExperimentalPagerApi::class, ExperimentalPagerApi::class)
 @Composable
-fun SectionTabScreen() {
+fun SectionTabScreen(
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
+) {
 
     val tabs = listOf(
         TabsItem.FoodTab,
@@ -33,12 +32,21 @@ fun SectionTabScreen() {
         TabsItem.AllNewsTab
     )
 
+
     val pagerState = rememberPagerState()
 
-    Scaffold{
+
+    Scaffold {
         Column {
+
             Tabs(tabs = tabs, pagerState = pagerState)
-            TabsContent(tabs = tabs, pagerState = pagerState)
+
+            TabsContent(
+                tabs = tabs,
+                pagerState = pagerState,
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel,
+            )
         }
     }
 }
@@ -46,6 +54,7 @@ fun SectionTabScreen() {
 @OptIn(ExperimentalMaterialApi::class, ExperimentalPagerApi::class)
 @Composable
 fun Tabs(tabs: List<TabsItem>, pagerState: PagerState) {
+
     val scope = rememberCoroutineScope()
     // OR ScrollableTabRow()
     ScrollableTabRow(
@@ -58,17 +67,15 @@ fun Tabs(tabs: List<TabsItem>, pagerState: PagerState) {
             TabRowDefaults.Indicator(
                 Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
             )
-        }){
+        }
 
+    ) {
         tabs.forEachIndexed { index, tab ->
             // OR LeadingIconTab()
-
             Tab(
                 text = {
-                    Text(
-                        text = tab.title,
-                        fontSize = MaterialTheme.typography.h6.fontSize,
-                        )},
+                    Text(text = tab.title, fontSize = MaterialTheme.typography.h6.fontSize)
+                },
                 selected = pagerState.currentPage == index,
                 onClick = {
                     scope.launch {
@@ -78,12 +85,54 @@ fun Tabs(tabs: List<TabsItem>, pagerState: PagerState) {
             )
         }
     }
+
 }
+
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabsContent(tabs: List<TabsItem>, pagerState: PagerState) {
+fun TabsContent(
+    tabs: List<TabsItem>,
+    pagerState: PagerState,
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
+) {
+
     HorizontalPager(state = pagerState, count = tabs.size) { page ->
-        tabs[page].screen()
+
+        when (page) {
+            0 -> FoodSectionLazyColumn(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
+
+            1 -> FootballSectionLazyColumn(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
+
+            2 -> TechnologySectionLazyColumn(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
+
+            3 -> PoliticsSectionLazyColumn(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
+
+            4 -> ScienceSectionLazyColumn(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
+
+            5 -> {
+                AllNewsLazyColumn(
+                    navController = navController,
+                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                )
+
+            }
+        }
     }
 }

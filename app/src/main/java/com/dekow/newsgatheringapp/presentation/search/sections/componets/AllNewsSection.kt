@@ -12,15 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.search.sections.NewsSectionListItem
 import com.dekow.newsgatheringapp.presentation.search.sections.SectionsViewModel
 
 @Composable
-fun AllNewsLazyColumn() {
+fun AllNewsLazyColumn(
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
+) {
 
     val sectionsViewModel: SectionsViewModel = hiltViewModel()
 
-    val allNewsState =  sectionsViewModel.allNewsSectionsState.value
+    val allNewsState = sectionsViewModel.allNewsSectionsState.value
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -29,11 +34,15 @@ fun AllNewsLazyColumn() {
         LazyColumn(
             contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp)
-        ){
+        ) {
 
             allNewsState.news?.let {
-                items(it){ news ->
-                    NewsSectionListItem(searchNewsItem = news)
+                items(it) { news ->
+                    NewsSectionListItem(
+                        searchNewsItem = news,
+                        navController = navController,
+                        sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                    )
                 }
             }
 
@@ -41,7 +50,7 @@ fun AllNewsLazyColumn() {
 
 
         // error or loading state
-        if(allNewsState.error.isNotBlank()) {
+        if (allNewsState.error.isNotBlank()) {
             Text(
                 text = allNewsState.error,
                 color = MaterialTheme.colors.error,
@@ -52,8 +61,12 @@ fun AllNewsLazyColumn() {
                     .align(Alignment.TopCenter)
             )
         }
-        if(allNewsState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp))
+        if (allNewsState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 20.dp)
+            )
         }
     }
 

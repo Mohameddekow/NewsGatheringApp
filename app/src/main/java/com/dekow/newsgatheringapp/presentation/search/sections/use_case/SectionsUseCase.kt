@@ -2,7 +2,7 @@ package com.dekow.newsgatheringapp.presentation.search.sections.use_case
 
 import com.dekow.newsgatheringapp.commons.Resource
 import com.dekow.newsgatheringapp.domain.model.NewsItem
-import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto.toNewsItem
+import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto.mapToNewsListItems
 import com.dekow.newsgatheringapp.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,7 +21,7 @@ constructor(
         try {
             emit(Resource.Loading<List<NewsItem>>())
 
-            val newsList = newsRepository.getNewsOfSpecificSection(query = query).toNewsItem()
+            val newsList = newsRepository.getNewsOfSpecificSection(query = query).mapToNewsListItems()
 
             emit(Resource.Success<List<NewsItem>>(newsList))
         }catch (e: HttpException){

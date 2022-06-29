@@ -3,6 +3,7 @@ package com.dekow.newsgatheringapp.domain.repository
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.dekow.newsgatheringapp.data.remote.GuardiansNewsApi
+import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.details_dto.NewsDetailsResponse
 import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto.GuardianMain
 import javax.inject.Inject
 
@@ -11,6 +12,15 @@ class NewsRepositoryImpl
 constructor(
     private val guardiansNewsApi: GuardiansNewsApi
 ): NewsRepository {
+
+//    override suspend fun newsDetails(sectionId: String): NewsDetailsDto {
+//        return guardiansNewsApi.newsDetails(sectionId = sectionId)
+//    }
+
+
+    override suspend fun newsDetails(): NewsDetailsResponse {
+        return guardiansNewsApi.newsDetails()
+    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)

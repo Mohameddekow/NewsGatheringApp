@@ -3,7 +3,6 @@ package com.dekow.newsgatheringapp.presentation.home
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,19 +33,20 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.commons.DammyData
-import com.dekow.newsgatheringapp.commons.getCurrentDate
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
+import com.dekow.newsgatheringapp.domain.model.NewsDetailsItem
 import com.dekow.newsgatheringapp.domain.model.NewsItem
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.screen.Screens
 import com.dekow.newsgatheringapp.ui.theme.*
 
 val data = DammyData.data
 val dataList = DammyData.dataList
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
 ) {
 
     val homeViewModel: HomeViewModel = hiltViewModel()
@@ -55,9 +55,6 @@ fun HomeScreen(
 
     val breakingNewsListState = homeViewModel.breakingNewsListState.value
 
-
-    val today = getCurrentDate()
-    Log.d("todaay", today.toString())
 
     Box(
         modifier = Modifier
@@ -73,14 +70,22 @@ fun HomeScreen(
         ) {
 
             //news of the day
-            breakingNewsState.news?.let {
-                NewsOfTheDay(navController = navController, breakingNews = it)
+            breakingNewsState.news?.let{
+                NewsOfTheDay(
+                    navController = navController,
+                    breakingNews = it,
+                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                )
             }
 
 
             //breaking news list
             breakingNewsListState.news?.let {
-                BreakingNews(navController = navController, breakingNewsList = it)
+                BreakingNews(
+                    navController = navController,
+                    breakingNewsList = it,
+                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                )
             }
 
         }
@@ -102,7 +107,8 @@ fun HomeScreen(
 @Composable
 fun NewsOfTheDay(
     navController: NavHostController,
-    breakingNews: List<NewsItem>
+    breakingNews: List<NewsItem>,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
 ) {
 
     Box(
@@ -135,22 +141,24 @@ fun NewsOfTheDay(
             fallback = painterResource(id = R.drawable.placeholder)
         )
 
+        IconButton(
+            modifier = Modifier.padding(start = 15.dp, top = 25.dp),
+            onClick = {
+            navController.navigate(Screens.ProfileScreen.route) {
+                popUpTo(Screens.ProfileScreen.route) {
+                    inclusive = true
+                }
+            }
+        }) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_icons8_menu_60),
+                contentDescription = "menu",
+                modifier = Modifier
+                    .size(36.dp),
+                tint = Color.White,
+            )
+        }
 
-        Icon(
-            painter = painterResource(id = R.drawable.ic_icons8_menu_60),
-            contentDescription = "menu",
-            modifier = Modifier
-                .padding(start = 15.dp, top = 25.dp)
-                .size(36.dp)
-                .clickable {
-                    navController.navigate(Screens.ProfileScreen.route) {
-                        popUpTo(Screens.ProfileScreen.route) {
-                            inclusive = true
-                        }
-                    }
-                },
-            tint = Color.White,
-        )
 
         Column(
             modifier = Modifier
@@ -170,55 +178,71 @@ fun NewsOfTheDay(
                 )
             }
 
-            Text(
-                text = breakingNews[0].headline.toString(),
-                modifier = Modifier
-                    .padding(bottom = 15.dp, end = 5.dp)
-                    .fillMaxWidth(0.9f),
-                textAlign = TextAlign.Start,
-                fontSize = MaterialTheme.typography.h5.fontSize,
-                color = Color.White,
-                maxLines = 3,
-                fontWeight = FontWeight.Bold,
-                overflow = TextOverflow.Ellipsis,
-            )
+            breakingNews[0].headline?.let {
+                Text(
+                    text = it,
+                    modifier = Modifier
+                        .padding(bottom = 15.dp, end = 5.dp)
+                        .fillMaxWidth(0.9f),
+                    textAlign = TextAlign.Start,
+                    fontSize = MaterialTheme.typography.h5.fontSize,
+                    color = Color.White,
+                    maxLines = 3,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
 
             //learn more row(details)
             Row (modifier = Modifier
-                .padding(bottom = 15.dp, top = 5.dp),
+                .padding(bottom = 15.dp, top = 5.dp, start = 2.dp, end = 2.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .clickable {
+                    val newsDetails = NewsDetailsItem(
+                        image = breakingNews[0].image,
+                        title = breakingNews[0].title,
+                        headline = breakingNews[0].headline,
+                        time = breakingNews[0].time,
+                        author = breakingNews[0].author,
+                        authorsImage = breakingNews[0].authorsImage,
+                        ratings = breakingNews[0].ratings,
+                        sourcePublication = breakingNews[0].sourcePublication,
+                        sectionName = breakingNews[0].sectionName,
+                        bodyText = breakingNews[0].bodyText,
+                        trailText = breakingNews[0].trailText,
+                        body = breakingNews[0].body,
+                        productionOffice = breakingNews[0].productionOffice,
+                        lastModified = breakingNews[0].lastModified,
+
+                   )
+
+                    sharedNewsDetailsViewModel.addDetails(newsDetails)
+
+                    navController.navigate(route = Screens.DetailsScreen.route) {
+                        popUpTo(Screens.DetailsScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start)
             {
                 Text(
                     text = "Learn More",
                     modifier = Modifier
-                        .padding(end = 5.dp)
-                        .clickable {
-                            navController.navigate(route = Screens.DetailsScreen.route) {
-                                popUpTo(Screens.DetailsScreen.route) {
-                                    inclusive = true
-                                }
-                            }
-                        },
+                        .padding(end = 5.dp),
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                 )
-                IconButton(onClick = {
-                    navController.navigate(route = Screens.DetailsScreen.route){
-                        popUpTo(Screens.DetailsScreen.route){
-                            inclusive = true
-                        }
-                    }
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.icons8_right_arrow_50),
-                        tint = Color.White,
-                        modifier = Modifier
-                            .padding(start = 5.dp)
-                            .size(40.dp),
-                        contentDescription = "learn more arrow"
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.icons8_right_arrow_50),
+                    tint = Color.White,
+                    modifier = Modifier
+                        .padding(start = 5.dp)
+                        .size(40.dp),
+                    contentDescription = "learn more arrow"
+                )
+
             }
         }
 
@@ -230,7 +254,8 @@ fun NewsOfTheDay(
 @Composable
 fun BreakingNews(
     navController: NavHostController,
-    breakingNewsList: List<NewsItem>
+    breakingNewsList: List<NewsItem>,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
 ) {
     Column(
         modifier = Modifier
@@ -283,7 +308,11 @@ fun BreakingNews(
             horizontalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(breakingNewsList) { news ->
-                NewsRowItem(breakingNews = news)
+                NewsRowItem(
+                    breakingNews = news,
+                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel,
+                    navController = navController
+                )
             }
         }
 
@@ -293,10 +322,39 @@ fun BreakingNews(
 
 @Composable
 fun NewsRowItem(
-    breakingNews: NewsItem
+    breakingNews: NewsItem,
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
 ) {
     Column(
         modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .clickable {
+                val newsDetails = NewsDetailsItem(
+                    image = breakingNews.image,
+                    title = breakingNews.title,
+                    headline = breakingNews.headline,
+                    time = breakingNews.time,
+                    author = breakingNews.author,
+                    authorsImage = breakingNews.authorsImage,
+                    ratings = breakingNews.ratings,
+                    sourcePublication = breakingNews.sourcePublication,
+                    sectionName = breakingNews.sectionName,
+                    bodyText = breakingNews.bodyText,
+                    trailText = breakingNews.trailText,
+                    body = breakingNews.body,
+                    productionOffice = breakingNews.productionOffice,
+                    lastModified = breakingNews.lastModified,
+                )
+
+                sharedNewsDetailsViewModel.addDetails(newsDetails)
+
+                navController.navigate(route = Screens.DetailsScreen.route) {
+                    popUpTo(Screens.DetailsScreen.route) {
+                        inclusive = true
+                    }
+                }
+            }
     ) {
 
         breakingNews.let {
@@ -340,7 +398,7 @@ fun NewsRowItem(
                 modifier = Modifier
                     .alpha(0.6f)
                     .width(180.dp)
-                    .padding(top = 6.dp),
+                    .padding(top = 6.dp, bottom = 3.dp),
                 textAlign = TextAlign.Start,
             )
 

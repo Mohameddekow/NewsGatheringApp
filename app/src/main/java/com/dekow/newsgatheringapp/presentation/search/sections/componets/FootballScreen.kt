@@ -12,14 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.search.sections.NewsSectionListItem
 import com.dekow.newsgatheringapp.presentation.search.sections.SectionsViewModel
 
 @Composable
-fun FootballSectionLazyColumn() {
+fun FootballSectionLazyColumn(
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
+) {
     val sectionsViewModel: SectionsViewModel = hiltViewModel()
 
-    val footballState =  sectionsViewModel.footballSectionsState.value
+    val footballState = sectionsViewModel.footballSectionsState.value
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -28,11 +33,15 @@ fun FootballSectionLazyColumn() {
         LazyColumn(
             contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp)
-        ){
+        ) {
 
             footballState.news?.let {
-                items(it){ news ->
-                    NewsSectionListItem(searchNewsItem = news)
+                items(it) { news ->
+                    NewsSectionListItem(
+                        searchNewsItem = news,
+                        navController = navController,
+                        sharedNewsDetailsViewModel = sharedNewsDetailsViewModel,
+                    )
                 }
             }
 
@@ -40,7 +49,7 @@ fun FootballSectionLazyColumn() {
 
 
         // error or loading state
-        if(footballState.error.isNotBlank()) {
+        if (footballState.error.isNotBlank()) {
             Text(
                 text = footballState.error,
                 color = MaterialTheme.colors.error,
@@ -51,8 +60,12 @@ fun FootballSectionLazyColumn() {
                     .align(Alignment.TopCenter)
             )
         }
-        if(footballState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp))
+        if (footballState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 20.dp)
+            )
         }
     }
 

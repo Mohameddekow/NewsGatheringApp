@@ -1,7 +1,9 @@
-package com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto
+package com.dekow.newsgatheringapp.domain.model.data_transfer_obj.details_dto
 
 
-data class GuardianFields(
+import com.google.gson.annotations.SerializedName
+
+data class Fields(
     val headline: String,
     val trailText: String,
     val shortUrl: String,
@@ -9,7 +11,5 @@ data class GuardianFields(
     val thumbnail: String,
     val bodyText: String,
     val publication: String,
-    val lastModified: String,
-    val body: String,
-    val productionOffice: String,
+    val lastModified: String
 )

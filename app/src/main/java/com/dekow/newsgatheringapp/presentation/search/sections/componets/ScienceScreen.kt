@@ -12,15 +12,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.search.sections.NewsSectionListItem
 import com.dekow.newsgatheringapp.presentation.search.sections.SectionsViewModel
 
 @Composable
-fun ScienceSectionLazyColumn() {
+fun ScienceSectionLazyColumn(
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
+) {
 
     val sectionsViewModel: SectionsViewModel = hiltViewModel()
 
-    val scienceState =  sectionsViewModel.scienceSectionsState.value
+    val scienceState = sectionsViewModel.scienceSectionsState.value
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -29,11 +34,16 @@ fun ScienceSectionLazyColumn() {
         LazyColumn(
             contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp)
-        ){
+        ) {
 
             scienceState.news?.let {
-                items(it){ news ->
-                    NewsSectionListItem(searchNewsItem = news)
+                items(it) { news ->
+                    NewsSectionListItem(
+                        searchNewsItem = news,
+                        navController = navController,
+                        sharedNewsDetailsViewModel = sharedNewsDetailsViewModel,
+                    )
+
                 }
             }
 
@@ -41,7 +51,7 @@ fun ScienceSectionLazyColumn() {
 
 
         // error or loading state
-        if(scienceState.error.isNotBlank()) {
+        if (scienceState.error.isNotBlank()) {
             Text(
                 text = scienceState.error,
                 color = MaterialTheme.colors.error,
@@ -52,8 +62,12 @@ fun ScienceSectionLazyColumn() {
                     .align(Alignment.TopCenter)
             )
         }
-        if(scienceState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.TopCenter).padding(top = 20.dp))
+        if (scienceState.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 20.dp)
+            )
         }
     }
 }
