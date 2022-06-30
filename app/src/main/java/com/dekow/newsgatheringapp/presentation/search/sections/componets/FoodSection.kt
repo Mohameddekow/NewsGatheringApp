@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +27,7 @@ import coil.request.ImageRequest
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.NewsDetailsItem
 import com.dekow.newsgatheringapp.domain.model.NewsItem
+import com.dekow.newsgatheringapp.presentation.ShimmerLoadingSectionNewsList
 import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.search.sections.NewsSectionListItem
 import com.dekow.newsgatheringapp.presentation.search.sections.SectionsViewModel
@@ -65,7 +65,6 @@ fun FoodSectionLazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
 
-
         LazyColumn(
             contentPadding = PaddingValues(start = 4.dp, end = 4.dp, top = 15.dp, bottom = 70.dp),
             verticalArrangement = Arrangement.spacedBy(7.dp)
@@ -85,7 +84,7 @@ fun FoodSectionLazyColumn(
         }
 
 
-        // error or loading state
+        // show error if any
         if (foodSectionState.error.isNotBlank()) {
             Text(
                 text = foodSectionState.error,
@@ -97,12 +96,14 @@ fun FoodSectionLazyColumn(
                     .align(Alignment.TopCenter)
             )
         }
+
+        //load shimmer
         if (foodSectionState.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 20.dp)
-            )
+            Column {
+                repeat(10) {
+                    ShimmerLoadingSectionNewsList()
+                }
+            }
         }
 
     }
