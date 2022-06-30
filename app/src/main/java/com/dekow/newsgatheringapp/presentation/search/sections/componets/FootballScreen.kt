@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.dekow.newsgatheringapp.presentation.ShimmerLoadingSectionNewsList
 import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.search.sections.NewsSectionListItem
 import com.dekow.newsgatheringapp.presentation.search.sections.SectionsViewModel
@@ -47,8 +48,7 @@ fun FootballSectionLazyColumn(
 
         }
 
-
-        // error or loading state
+        //show error if any
         if (footballState.error.isNotBlank()) {
             Text(
                 text = footballState.error,
@@ -60,12 +60,14 @@ fun FootballSectionLazyColumn(
                     .align(Alignment.TopCenter)
             )
         }
+
+        //load shimmer
         if (footballState.isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 20.dp)
-            )
+            Column{
+                repeat(10){
+                    ShimmerLoadingSectionNewsList()
+                }
+            }
         }
     }
 

@@ -1,8 +1,5 @@
 package com.dekow.newsgatheringapp.presentation.home
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -36,12 +33,13 @@ import com.dekow.newsgatheringapp.commons.DammyData
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
 import com.dekow.newsgatheringapp.domain.model.NewsDetailsItem
 import com.dekow.newsgatheringapp.domain.model.NewsItem
+import com.dekow.newsgatheringapp.presentation.ShimmerLoadingBreakingNews
+import com.dekow.newsgatheringapp.presentation.ShimmerLoadingBreakingNewsList
 import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.screen.Screens
-import com.dekow.newsgatheringapp.ui.theme.*
+import com.dekow.newsgatheringapp.ui.theme.Test
 
 val data = DammyData.data
-val dataList = DammyData.dataList
 
 @Composable
 fun HomeScreen(
@@ -69,24 +67,94 @@ fun HomeScreen(
             horizontalAlignment = Alignment.Start,
         ) {
 
-            //news of the day
-            breakingNewsState.news?.let{
-                NewsOfTheDay(
-                    navController = navController,
-                    breakingNews = it,
-                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
-                )
+
+            //news of the day box(breaking news)
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                //load shimmer
+                if (breakingNewsState.isLoading) {
+                    ShimmerLoadingBreakingNews()
+                }
+                //show error if any
+                if (breakingNewsState.error.isNotBlank()) {
+                    ShimmerLoadingBreakingNews()
+                    Text(
+                        text = breakingNewsState.error,
+                        color = MaterialTheme.colors.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 20.dp)
+                            .align(Alignment.TopCenter)
+                    )
+                }
+
+                //news of the day
+                breakingNewsState.news?.let {
+                    NewsOfTheDay(
+                        navController = navController,
+                        breakingNews = it,
+                        sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                    )
+                }
+
             }
 
 
             //breaking news list
-            breakingNewsListState.news?.let {
-                BreakingNews(
-                    navController = navController,
-                    breakingNewsList = it,
-                    sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
-                )
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (breakingNewsListState.isLoading) {
+                    Row(
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 18.dp, end = 10.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Breaking News",
+                            fontSize = 21.sp,
+                            fontWeight = FontWeight.ExtraBold
+                        )
+                        Text(text = "More", fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                    }
+                    Row {
+                        repeat(6) {
+                            ShimmerLoadingBreakingNewsList()
+                        }
+                    }
+                }
+
+                //show error if any
+                if (breakingNewsListState.error.isNotBlank()) {
+                    Row {
+                        repeat(6) {
+                            ShimmerLoadingBreakingNewsList()
+                        }
+                    }
+                    Text(
+                        text = breakingNewsState.error,
+                        color = MaterialTheme.colors.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp, vertical = 20.dp)
+                            .align(Alignment.TopCenter)
+                    )
+                }
+
+                //breaking news list
+                breakingNewsListState.news?.let {
+                    BreakingNews(
+                        navController = navController,
+                        breakingNewsList = it,
+                        sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+                    )
+                }
             }
+
 
         }
 
@@ -144,12 +212,12 @@ fun NewsOfTheDay(
         IconButton(
             modifier = Modifier.padding(start = 15.dp, top = 25.dp),
             onClick = {
-            navController.navigate(Screens.ProfileScreen.route) {
-                popUpTo(Screens.ProfileScreen.route) {
-                    inclusive = true
+                navController.navigate(Screens.ProfileScreen.route) {
+                    popUpTo(Screens.ProfileScreen.route) {
+                        inclusive = true
+                    }
                 }
-            }
-        }) {
+            }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_icons8_menu_60),
                 contentDescription = "menu",
@@ -194,38 +262,40 @@ fun NewsOfTheDay(
             }
 
             //learn more row(details)
-            Row (modifier = Modifier
-                .padding(bottom = 15.dp, top = 5.dp, start = 2.dp, end = 2.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .clickable {
-                    val newsDetails = NewsDetailsItem(
-                        image = breakingNews[0].image,
-                        title = breakingNews[0].title,
-                        headline = breakingNews[0].headline,
-                        time = breakingNews[0].time,
-                        author = breakingNews[0].author,
-                        authorsImage = breakingNews[0].authorsImage,
-                        ratings = breakingNews[0].ratings,
-                        sourcePublication = breakingNews[0].sourcePublication,
-                        sectionName = breakingNews[0].sectionName,
-                        bodyText = breakingNews[0].bodyText,
-                        trailText = breakingNews[0].trailText,
-                        body = breakingNews[0].body,
-                        productionOffice = breakingNews[0].productionOffice,
-                        lastModified = breakingNews[0].lastModified,
+            Row(
+                modifier = Modifier
+                    .padding(bottom = 15.dp, top = 5.dp, start = 2.dp, end = 2.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable {
+                        val newsDetails = NewsDetailsItem(
+                            image = breakingNews[0].image,
+                            title = breakingNews[0].title,
+                            headline = breakingNews[0].headline,
+                            time = breakingNews[0].time,
+                            author = breakingNews[0].author,
+                            authorsImage = breakingNews[0].authorsImage,
+                            ratings = breakingNews[0].ratings,
+                            sourcePublication = breakingNews[0].sourcePublication,
+                            sectionName = breakingNews[0].sectionName,
+                            bodyText = breakingNews[0].bodyText,
+                            trailText = breakingNews[0].trailText,
+                            body = breakingNews[0].body,
+                            productionOffice = breakingNews[0].productionOffice,
+                            lastModified = breakingNews[0].lastModified,
 
-                   )
+                            )
 
-                    sharedNewsDetailsViewModel.addDetails(newsDetails)
+                        sharedNewsDetailsViewModel.addDetails(newsDetails)
 
-                    navController.navigate(route = Screens.DetailsScreen.route) {
-                        popUpTo(Screens.DetailsScreen.route) {
-                            inclusive = true
+                        navController.navigate(route = Screens.DetailsScreen.route) {
+                            popUpTo(Screens.DetailsScreen.route) {
+                                inclusive = true
+                            }
                         }
-                    }
-                },
+                    },
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start)
+                horizontalArrangement = Arrangement.Start
+            )
             {
                 Text(
                     text = "Learn More",
@@ -260,7 +330,7 @@ fun BreakingNews(
     Column(
         modifier = Modifier
             .padding(horizontal = 15.dp),
-           // .fillMaxHeight(),
+        // .fillMaxHeight(),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -272,7 +342,7 @@ fun BreakingNews(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
+        ) {
 
             Text(
                 text = "Breaking News",
@@ -407,64 +477,3 @@ fun NewsRowItem(
     }
 
 }
-
-
-//        Image(
-//            painter = painterResource(R.drawable.newimageplaceholder),
-//            contentDescription = "image",
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .fillMaxHeight()
-//                .alpha(1f),
-//            contentScale = ContentScale.FillBounds,
-//        )
-//
-
-
-//            data.desc?.let {
-//                Text(
-//                    text = it,
-//                    modifier = Modifier
-//                        .padding(bottom = 15.dp, end = 5.dp)
-//                        .fillMaxWidth(0.9f),
-//                    textAlign = TextAlign.Start,
-//                    fontSize = MaterialTheme.typography.h5.fontSize,
-//                    color = Color.White,
-//                    maxLines = 3,
-//                    fontWeight = FontWeight.Bold,
-//                    overflow = TextOverflow.Ellipsis,
-//                )
-//            }
-
-
-//        breakingNews[0].imageInt?.let { painterResource(id = it) }?.let {
-//            Image(
-//                painter = it,
-//                contentDescription = "newsImage",
-//                modifier = Modifier
-//                    .clip(RoundedCornerShape(15.dp))
-//                    .width(180.dp)
-//                    .height(120.dp)
-//            )
-
-
-//        newsItemTest.time?.let {
-//            Text(
-//                text = it,
-//                modifier = Modifier
-//                    .alpha(0.6f)
-//                    .padding(top = 6.dp),
-//                textAlign = TextAlign.Start,
-//            )
-//        }
-//
-//        newsItemTest.author?.let {
-//            Text(
-//                text = it,
-//                modifier = Modifier
-//                    .alpha(0.6f)
-//                    .padding(top = 6.dp),
-//                textAlign = TextAlign.Start,
-//            )
-//        }
-//    }
