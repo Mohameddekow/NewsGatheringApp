@@ -21,12 +21,30 @@ interface GuardiansNewsApi {
     ): NewsDetailsResponse
 
 
+//    https://content.guardianapis.com/search?from-date=2022-06-06&order-by=newest&show-tags=contributor&show-fields=all&q=mom&api-key=05f35298-d1c4-471a-8f7f-cc379945384a
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @GET("search")
+    suspend fun searchForAnyNews(
+//        @Query("section") query: String,
+        @Query("page-size") pageSize: String = "30",
+        @Query("from-date") fromDate: String = "2014-01-01",
+        @Query("to-date") toDate: String? =  usersCurrentDate,//"2022-06-26",
+        @Query("order-by") order: String = "newest",
+        @Query("use-date") useDate: String = "published",
+        @Query("show-tags") tags: String = "contributor",
+        @Query("show-fields") fields: String = "all",
+        @Query("format") format: String = "json",
+        @Query("q") query: String,
+    ): GuardianMain
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     @GET("search")
     suspend fun getNewsOfSpecificSection(
         @Query("section") query: String,
-        @Query("page-size") pageSize: String = "20",
+        @Query("page-size") pageSize: String = "30",
         @Query("from-date") fromDate: String = "2014-01-01",
         @Query("to-date") toDate: String? =  usersCurrentDate,//"2022-06-26",
         @Query("order-by") order: String = "newest",
@@ -42,7 +60,7 @@ interface GuardiansNewsApi {
     @GET("search")
     suspend fun getBreakingNews(
         @Query("section") query: String,
-        @Query("page-size") pageSize: String = "20",
+        @Query("page-size") pageSize: String = "30",
         @Query("from-date") fromDate: String? = "2022-06-26", // usersCurrentDate,
         @Query("to-date") toDate: String? =  usersCurrentDate,//"2022-06-26",
         @Query("order-by") order: String = "newest",
@@ -57,7 +75,7 @@ interface GuardiansNewsApi {
     @GET("search")
     suspend fun getBreakingNewsList(
         @Query("section") query: String,
-        @Query("page-size") pageSize: String = "20",
+        @Query("page-size") pageSize: String = "30",
         @Query("from-date") fromDate: String? =  "2022-01-25",
         @Query("to-date") toDate: String? = usersCurrentDate,
         @Query("order-by") order: String = "relevance",

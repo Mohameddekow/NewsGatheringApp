@@ -1,6 +1,7 @@
 package com.dekow.newsgatheringapp.presentation.search
 
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +28,7 @@ import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.HomeBottomMenuItem
 import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewModel
 import com.dekow.newsgatheringapp.presentation.home.HomeBottomMenu
+import com.dekow.newsgatheringapp.presentation.screen.Screens
 import com.dekow.newsgatheringapp.presentation.search.sections.section_tabs.SectionTabScreen
 import com.dekow.newsgatheringapp.ui.theme.DetailsItemBackgroundWhite
 import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
@@ -51,7 +54,7 @@ fun SearchNewsScreen(
             verticalArrangement = Arrangement.Top,
         ) {
 
-            SearchNewsBar(navController = navController)
+            SearchNewsBar(navController = navController, sharedNewsDetailsViewModel = sharedNewsDetailsViewModel)
 
             Column(
                 modifier = Modifier
@@ -89,12 +92,13 @@ fun SearchNewsScreen(
 
 @Composable
 fun SearchNewsBar(
-    navController: NavHostController
+    navController: NavHostController,
+    sharedNewsDetailsViewModel: SharedNewsDetailsViewModel,
 ) {
     var searchQuery by remember {
         mutableStateOf("")
     }
-
+    val context = LocalContext.current
     val darkTheme: Boolean = isSystemInDarkTheme()
 
     Icon(
@@ -153,7 +157,9 @@ fun SearchNewsBar(
                 )
             },
             trailingIcon = {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    if (searchQuery.isNotBlank()) searchQuery = ""
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_icons8_cancel_50),
                         contentDescription = "search icon",
@@ -170,6 +176,18 @@ fun SearchNewsBar(
             keyboardActions = KeyboardActions(
                 onSearch = {
                     ///on Search
+                    sharedNewsDetailsViewModel.addSearchedKeyWord(searchQuery)
+
+                    if (searchQuery.isNotEmpty()){
+                        navController.navigate(Screens.DisplaySearchedScreen.route + "/$searchQuery"){
+                            popUpTo(Screens.DisplaySearchedScreen.route){
+                                inclusive = true
+                            }
+                        }
+                    }else{
+                        Toast.makeText(context, "The search query can't be empty", Toast.LENGTH_LONG).show()
+                    }
+
                 }
             )
         )

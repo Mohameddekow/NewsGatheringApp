@@ -17,12 +17,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SectionsViewModel
-    @Inject
-    constructor(
-        private val sectionsUseCase: SectionsUseCase,
-        savedStateHandle: SavedStateHandle
-    ): ViewModel()
-{
+@Inject
+constructor(
+    private val sectionsUseCase: SectionsUseCase,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
     private val _sectionsState = mutableStateOf(NewsState())
     val sectionsState: State<NewsState> = _sectionsState
@@ -52,8 +51,6 @@ class SectionsViewModel
     val technologySectionsState: State<NewsState> = _technologySectionsState
 
 
-
-
     init {
 
         //get food news to launch it first
@@ -70,7 +67,6 @@ class SectionsViewModel
             getNewsOfSpecificSection(section)
         }
     }
-
 
 
     private fun getAllNews(query: String) {
@@ -170,24 +166,23 @@ class SectionsViewModel
     }
 
     private fun getTechnologyNews(query: String) {
-            sectionsUseCase(query).onEach { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        _technologySectionsState.value = NewsState(news = result.data ?: emptyList())
-                    }
-                    is Resource.Error -> {
-                        _technologySectionsState.value = NewsState(
-                            error = result.errorMessage ?: "An unexpected error occurred"
-                        )
-                    }
-                    is Resource.Loading -> {
-                        _technologySectionsState.value = NewsState(isLoading = true)
-                    }
+        sectionsUseCase(query).onEach { result ->
+            when (result) {
+                is Resource.Success -> {
+                    _technologySectionsState.value = NewsState(news = result.data ?: emptyList())
                 }
-            }.launchIn(viewModelScope)
+                is Resource.Error -> {
+                    _technologySectionsState.value = NewsState(
+                        error = result.errorMessage ?: "An unexpected error occurred"
+                    )
+                }
+                is Resource.Loading -> {
+                    _technologySectionsState.value = NewsState(isLoading = true)
+                }
+            }
+        }.launchIn(viewModelScope)
 
-        }
-
+    }
 
 
     private fun getNewsOfSpecificSection(query: String) {

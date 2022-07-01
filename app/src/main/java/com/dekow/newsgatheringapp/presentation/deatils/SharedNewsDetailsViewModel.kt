@@ -1,43 +1,40 @@
 package com.dekow.newsgatheringapp.presentation.deatils
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.dekow.newsgatheringapp.commons.Constants.SECTION_NAME
-import com.dekow.newsgatheringapp.commons.Resource
 import com.dekow.newsgatheringapp.domain.model.NewsDetailsItem
-import com.dekow.newsgatheringapp.presentation.search.sections.use_case.SectionsUseCase
-import com.dekow.newsgatheringapp.presentation.states.NewsDetailsState
-import com.dekow.newsgatheringapp.presentation.states.NewsState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SharedNewsDetailsViewModel
-    @Inject
-    constructor(
+@Inject
+constructor(
 //        private val newsDetailsUseCase: NewsDetailsUseCase,
-        savedStateHandle: SavedStateHandle
-    ): ViewModel()
-{
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
 
-    var  details by mutableStateOf<NewsDetailsItem?>(null)
+    var searchedKeyWord by mutableStateOf<String?>(null)
         private set
 
 
-    fun addDetails(newsDetails: NewsDetailsItem){
+    var details by mutableStateOf<NewsDetailsItem?>(null)
+        private set
+
+
+
+    fun addDetails(newsDetails: NewsDetailsItem) {
         details = newsDetails
     }
 
-
+    fun addSearchedKeyWord(keyword: String) {
+        searchedKeyWord = keyword
+    }
 
 //    val sharedNewsDetailsState: State = _sharedNewsDetailsState
 
@@ -48,7 +45,6 @@ class SharedNewsDetailsViewModel
 //    fun addDetails(newsDetails: NewsDetailsItem){
 //         details = newsDetails
 //    }
-
 
 
 //

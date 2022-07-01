@@ -34,6 +34,11 @@ constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
+    override suspend fun searchForAnyNews(query: String): GuardianMain {
+        return guardiansNewsApi.searchForAnyNews(query = query)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getBreakingNewsList(query: String): GuardianMain {
         return guardiansNewsApi.getBreakingNewsList(query = query)
     }
