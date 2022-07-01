@@ -1,5 +1,6 @@
 package com.dekow.newsgatheringapp.presentation.search.use_case
 
+import androidx.lifecycle.SavedStateHandle
 import com.dekow.newsgatheringapp.commons.Resource
 import com.dekow.newsgatheringapp.domain.model.NewsItem
 import com.dekow.newsgatheringapp.domain.model.data_transfer_obj.guardian_dto.mapToNewsListItems
@@ -14,14 +15,14 @@ import javax.inject.Inject
 class SearchUseCase
 @Inject
 constructor(
-    private val newsRepository: NewsRepository
+    private val newsRepository: NewsRepository,
 ) {
 
     operator fun invoke(query: String): Flow<Resource<List<NewsItem>>> = flow {
         try {
             emit(Resource.Loading<List<NewsItem>>())
 
-            val newsList = newsRepository.getNewsOfSpecificSection(query = query).mapToNewsListItems()
+            val newsList = newsRepository.searchForAnyNews(query = query).mapToNewsListItems()
 
             emit(Resource.Success<List<NewsItem>>(newsList))
         }catch (e: HttpException){

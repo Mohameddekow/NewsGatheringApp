@@ -12,6 +12,7 @@ import com.dekow.newsgatheringapp.presentation.deatils.SharedNewsDetailsViewMode
 import com.dekow.newsgatheringapp.presentation.home.HomeScreen
 import com.dekow.newsgatheringapp.presentation.profile.ProfileScreen
 import com.dekow.newsgatheringapp.presentation.screen.Screens
+import com.dekow.newsgatheringapp.presentation.search.DisplaySearchedNews
 import com.dekow.newsgatheringapp.presentation.search.SearchNewsScreen
 import com.dekow.newsgatheringapp.presentation.search.sections.componets.*
 
@@ -56,6 +57,14 @@ fun SetUpHomeNavigation() {
             route = Screens.SearchScreen.route
         ) {
             SearchNewsScreen(
+                navController = navController,
+                sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
+            )
+        }
+        composable(
+            route = Screens.DisplaySearchedScreen.route + "/{q}"
+        ) {
+            DisplaySearchedNews(
                 navController = navController,
                 sharedNewsDetailsViewModel = sharedNewsDetailsViewModel
             )

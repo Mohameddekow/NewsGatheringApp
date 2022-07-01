@@ -11,6 +11,9 @@ interface NewsRepository {
 
     suspend fun getNewsOfSpecificSection(query: String):  GuardianMain
 
+    suspend fun searchForAnyNews(query: String):  GuardianMain
+
+
     suspend fun getBreakingNews(query: String):  GuardianMain
 
     suspend fun getBreakingNewsList(query: String):  GuardianMain
