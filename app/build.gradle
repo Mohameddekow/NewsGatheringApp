@@ -8,6 +8,10 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def  apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     compileSdk 32
 
@@ -22,6 +26,10 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        //include the api key into the gradle
+        buildConfigField("String", "GUARDIANS_API_KEY", apikeyProperties['GUARDIANS_API_KEY'])
+
     }
 
     buildTypes {
@@ -48,6 +56,7 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
 }
 
 dependencies {

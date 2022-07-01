@@ -1,6 +1,7 @@
 package com.dekow.newsgatheringapp.data.di
 
 import com.dekow.newsgatheringapp.commons.Constants.BASE_URL
+import com.dekow.newsgatheringapp.BuildConfig
 import com.dekow.newsgatheringapp.data.remote.AuthInterceptor
 import com.dekow.newsgatheringapp.data.remote.GuardiansNewsApi
 import com.dekow.newsgatheringapp.domain.repository.NewsRepository

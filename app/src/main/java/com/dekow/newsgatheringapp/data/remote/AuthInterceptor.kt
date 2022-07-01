@@ -1,13 +1,18 @@
 package com.dekow.newsgatheringapp.data.remote
 
+import com.dekow.newsgatheringapp.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 
 class AuthInterceptor(): Interceptor {
+
+    private val guardiansApiKey: String = BuildConfig.GUARDIANS_API_KEY //get the key from the gradle
+
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
             .newBuilder()
-            .addHeader("api-key", "05f35298-d1c4-471a-8f7f-cc379945384a")
+            .addHeader("api-key", guardiansApiKey)
             .build()
 
         return chain.proceed(request)
