@@ -79,13 +79,34 @@ and default parameters.
 I added some screenshots in the `screenshots` folder, in the root directory of the project. Added some GIFs to also show end to end test on the app
 
 
-
-   * Dark
+   * # Dark Theme
     
-      shimmer loading effect | Home | Add task
+      Home | Profile | Details
       --- | --- | ---
-      <img src="https://user-images.githubusercontent.com/61431856/176985261-e17fe755-c74f-4987-8021-3e5ff2d5a09a.jpg" width="280"/> | <img src="https://user-images.githubusercontent.com/61431856/167199838-d7bf2bf5-4621-4549-b927-a3bbd678c95e.jpg" width="280"/> | <img src="https://user-images.githubusercontent.com/61431856/167199884-95444029-1eef-442f-9cea-68622e999427.jpg" width="280"/>
+      <img src="screenshots/home.jpg" width="280"/> | <img src="screenshots/profile.jpg" width="280"/> | <img src="screenshots/details.jpg" width="280"/>
+      
+       Search tab 1 | Seach tab 2 | Search result
+      --- | --- | ---
+      <img src="screenshots/searchfood.jpg" width="280"/> | <img src="screenshots/searchfootball.jpg" width="280"/> | <img src="screenshots/searchresult.jpg" width="280"/>
 
+
+---
+
+   * # Light Theme
+    
+      Home | Profile | Details
+      --- | --- | ---
+      <img src="screenshots/home_light.jpg" width="280"/> | <img src="screenshots/profile_light.jpg" width="280"/> | <img src="screenshots/details_light.jpg" width="280"/>
+      
+       Search tab 1 | Seach tab 2 | Search result
+      --- | --- | ---
+      <img src="screenshots/searchfood_light.jpg" width="280"/> | <img src="screenshots/searchtech_light.jpg" width="280"/> | <img src="screenshots/searchresult_light.jpg" width="280"/>
+
+
+
+
+---
+>  PRs are :)
 
 
 
