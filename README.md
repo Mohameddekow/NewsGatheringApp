@@ -5,6 +5,8 @@ Gather News all over the world
 An android app built using [Jetpack Compose](https://developer.android.com/jetpack/compose) that consumes [THE GUARDIAN API](https://open-platform.theguardian.com/documentation) to show news of the day, breaking news, news of different sections in addition you can also search for any news by just typing any keyword(s) 
 
 
+<p align="center"> <img src="screenshots/searchscreen2.png" width="750"> </p>
+
 ---
 # The Setup 
 First, obtain your API key from [GUARDIANS](https://open-platform.theguardian.com/documentation) and add it in a file named `apikey.properties` within the root directory:
