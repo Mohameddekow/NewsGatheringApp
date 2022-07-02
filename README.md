@@ -102,7 +102,10 @@ I added some screenshots in the `screenshots` folder, in the root directory of t
       --- | --- | ---
       <img src="screenshots/searchfood_light.jpg" width="280"/> | <img src="screenshots/searchtech_light.jpg" width="280"/> | <img src="screenshots/searchresult_light.jpg" width="280"/>
 
+---
+## .gif that shows end-to-end test of the app
 
+<img src="screenshots/app.gif" width="280"/>
 
 
 ---
