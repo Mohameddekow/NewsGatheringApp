@@ -76,3 +76,26 @@ and default parameters.
 
 ---
 # Screenshots
+I added some screenshots in the `screenshots` folder, in the root directory of the project. Added some GIFs to also show end to end test on the app
+
+
+
+   * Dark
+    
+      shimmer loading effect | Home | Add task
+      --- | --- | ---
+      <img src="https://user-images.githubusercontent.com/61431856/176985261-e17fe755-c74f-4987-8021-3e5ff2d5a09a.jpg" width="280"/> | <img src="https://user-images.githubusercontent.com/61431856/167199838-d7bf2bf5-4621-4549-b927-a3bbd678c95e.jpg" width="280"/> | <img src="https://user-images.githubusercontent.com/61431856/167199884-95444029-1eef-442f-9cea-68622e999427.jpg" width="280"/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
