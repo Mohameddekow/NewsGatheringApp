@@ -105,7 +105,9 @@ I added some screenshots in the `screenshots` folder, in the root directory of t
 ---
 ## .gif that shows end-to-end test of the app
 
-<img src="screenshots/app.gif" width="280"/>
+
+   <img src="screenshots/app.gif" width="280"/> 
+
 
 
 ---
