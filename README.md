@@ -1,7 +1,7 @@
 # NewsGatheringApp
 Gather News all over the world
 
-# NewsGatheringApp is
+# News Gathering App is
 An android app built using [Jetpack Compose](https://developer.android.com/jetpack/compose) that consumes [THE GUARDIAN API](https://open-platform.theguardian.com/documentation) to show news of the day, breaking news, news of different sections in addition you can also search for any news by just typing any keyword(s) 
 
 
@@ -17,14 +17,28 @@ Then, replace it in the `build.gradle(:app)` :
 
 ```bash
 ...
-buildConfigField("String", "YOUR_API_KEY", apikeyProperties['YOUR_API_KEY'])
+def apikeyPropertiesFile = rootProject.file("apikey.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+ 
+android {
+
+  defaultConfig {
+     
+    // should correspond to key/value pairs inside the file   
+    buildConfigField("String", "YOUR_API_KEY", apikeyProperties['YOUR_API_KEY'])
+  }
+}
+
 ```
 
-Finally, rebuild the project for changes to take effect and don't forget to update the references of this key in the `APIService.kt` file.
+Finally, rebuild the project for changes to take effect and don't forget to update the references of this key in the `AuthInterceptor.kt` file.
+and retrieve the api key like this to pass it to the header of the interceptor
 
 ```bash
 ...
-@Query("api_key") apiKey: String = BuildConfig.YOUR_API_KEY,
+// inside of any of your application's code
+val guardiansApiKey = BuildConfig.YOUR_API_KEY,
 ```
 
 
@@ -58,7 +72,7 @@ and default parameters.
 - [OkHttp Logging Interceptor](https://github.com/square/okhttp/blob/master/okhttp-logging-interceptor/README.md) - Logs HTTP request and response data.
 - [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) - Library Support for coroutines.
 - [Flows](https://developer.android.com/kotlin/flow) - Flows are built on top of coroutines and can provide multiple values. A flow is conceptually a stream of data that can be computed asynchronously.
-- Shimmer loading effect to display as the data is loaded from the api
+- Shimmer loading effect to display as the data is loaded from the `guardians api`
 
 ---
 # Screenshots
