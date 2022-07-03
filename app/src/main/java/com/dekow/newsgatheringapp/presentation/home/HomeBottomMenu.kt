@@ -1,5 +1,6 @@
 package com.dekow.newsgatheringapp.presentation.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -67,32 +69,44 @@ fun HomeBottomMenu(
 
                     when (selectedItemIndex) {
                         0 -> {
-                            navController.navigate(Screens.HomeScreen.route){
-                                launchSingleTop = true
+                            if (navController.currentDestination?.route !== Screens.HomeScreen.route){
+                                //navigate only if we're not this destination
+                                navController.navigate(Screens.HomeScreen.route){
+                                    launchSingleTop = true
 
-                                popUpTo(Screens.HomeScreen.route){
-                                    inclusive = true
+                                    popUpTo(Screens.HomeScreen.route){
+                                        inclusive = true
+                                    }
                                 }
                             }
+
+
                         }
                         1 -> {
-                            navController.navigate(Screens.SearchScreen.route ){
-                                launchSingleTop = true
+                            if (navController.currentDestination?.route !== Screens.SearchScreen.route){
+                                //navigate only if we're not this destination
+                                navController.navigate(Screens.SearchScreen.route ){
+                                    launchSingleTop = true
 
-                                popUpTo(Screens.HomeScreen.route ){
-                                    inclusive = false
+                                    popUpTo(Screens.HomeScreen.route ){
+                                        inclusive = false
+                                    }
                                 }
                             }
                         }
-                        else -> {
-                            navController.navigate(Screens.ProfileScreen.route){
+                        2 -> {
+                            if (navController.currentDestination?.route !== Screens.ProfileScreen.route) {
+                                //navigate only if we're not this destination
+                                navController.navigate(Screens.ProfileScreen.route){
 
-                                launchSingleTop = true
+                                    launchSingleTop = true
 
-                                popUpTo(Screens.HomeScreen.route){
-                                    inclusive = false
+                                    popUpTo(Screens.HomeScreen.route){
+                                        inclusive = false
+                                    }
                                 }
                             }
+
                         }
                     }
                 }
