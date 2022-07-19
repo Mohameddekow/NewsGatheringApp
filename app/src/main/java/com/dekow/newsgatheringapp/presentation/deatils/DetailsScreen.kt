@@ -42,19 +42,12 @@ fun DetailsScreen(
     sharedNewsDetailsViewModel: SharedNewsDetailsViewModel
 ) {
     val newsDetails = sharedNewsDetailsViewModel.details
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LaunchedEffect(key1 = newsDetails) {
-            Log.d("detailss", newsDetails.toString())
-
-        }
         NewsDetails(navController = navController, newsDetails = newsDetails)
     }
-
 }
 
 
@@ -64,54 +57,20 @@ fun NewsDetails(
     newsDetails: NewsDetailsItem?
 ) {
     val darkTheme: Boolean = isSystemInDarkTheme()
-
-
-        //headline box
-//        Box(
-//            modifier = Modifier
-//                // .fillMaxHeight(0.43f)
-//                .fillMaxWidth(),
-//        ) {}
-
-
     val scrollState = rememberScrollState()
-
-
-
-
-        //news details box
-//        Box(
-//            modifier = Modifier
-//                .clip(
-//                    RoundedCornerShape(
-//                        topStart = 25.dp,
-//                        topEnd = 25.dp,
-//                        bottomStart = 0.dp,
-//                        bottomEnd = 0.dp
-//                    )
-//                )
-//                // .fillMaxHeight(0.6f)
-//                .fillMaxWidth()
-//                .background(
-//                    color = if (!darkTheme) LightModeBackgroundWhite else Color.Black
-//                )
-//            // .align(Alignment.BottomCenter),
-//        ) {}
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
 
-
         Column(
             modifier = Modifier.verticalScroll(scrollState)//.fillMaxWidth()
         ) {
 
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .height(280.dp)
             ){
 
                 AsyncImage(
@@ -177,25 +136,14 @@ fun NewsDetails(
 
             Column(
                 modifier = Modifier
-                    .padding(horizontal = 15.dp)
-                    .clip(
-                        RoundedCornerShape(
-                            topStart = 25.dp,
-                            topEnd = 25.dp,
-                            bottomStart = 0.dp,
-                            bottomEnd = 0.dp
-                        )
-                    )
-                    // .fillMaxHeight(0.6f)
-                    //.fillMaxWidth()
                     .background(
                         color = if (!darkTheme) LightModeBackgroundWhite else Color.Black
-                    )
-                // .align(Alignment.BottomCenter),
+                    ),
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(top = 20.dp, bottom = 20.dp)
+                        .padding(horizontal = 15.dp)
+                        .padding(top = 10.dp, bottom = 20.dp)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -208,7 +156,6 @@ fun NewsDetails(
                             .background(
                                 color = if (!darkTheme) Color.Black else LightModeBackgroundWhite
                             )
-                            //.weight(1f)
                             .padding(start = 3.dp, top = 3.dp, bottom = 3.dp, end = 15.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -250,15 +197,13 @@ fun NewsDetails(
                             .background(
                                 color = if (!darkTheme) DetailsItemBackgroundWhite else LightModeBackgroundWhite
                             )
-                            //.weight(1f)
-                            .padding(horizontal = 6.dp, vertical = 10.dp),
+                            .padding(horizontal = 6.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center,
                     ) {
 
                         newsDetails?.lastModified?.let {
                             Text(
                                 text =  it, //"5 hours ago",
-//                                    fontWeight = FontWeight.SemiBold,
                                 fontSize = MaterialTheme.typography.subtitle2.fontSize,
                                 color = if (!darkTheme) Color.Black else Color.Black,
                                 maxLines = 1,
@@ -273,7 +218,6 @@ fun NewsDetails(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(45))
-                            //.weight(1f)
                             .background(
                                 color = if (!darkTheme) DetailsItemBackgroundWhite else LightModeBackgroundWhite
                             )
@@ -283,7 +227,6 @@ fun NewsDetails(
                         newsDetails?.productionOffice?.let {
                             Text(
                                 text = it,  //5 ratings",
-//                                    fontWeight = FontWeight.SemiBold,
                                 fontSize = MaterialTheme.typography.subtitle2.fontSize,
                                 color = if (!darkTheme) Color.Black else Color.Black,
                                 maxLines = 1,
@@ -301,29 +244,21 @@ fun NewsDetails(
                     Text(
                         text = it,
                         modifier = Modifier
+                            .padding(horizontal = 15.dp)
                             .padding(bottom = 10.dp)
                             .alpha(0.9f),
                         textAlign = TextAlign.Start,
                         fontSize = MaterialTheme.typography.subtitle1.fontSize,
-
-                        )
+                    )
                 }
             }
 
         }
 
+        //overlapping fading top details bar
         FadingTopBar( scrollState = scrollState, navController = navController, darkTheme = darkTheme)
 
     }
-
-    //container box
-//    Box(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .fillMaxSize(),
-//        //contentAlignment = Alignment.Center,
-//    ) {
-//    }
 
 }
 
@@ -334,29 +269,27 @@ fun FadingTopBar(
     darkTheme: Boolean
 ) {
 
-   Box(
-       contentAlignment = Alignment.Center
-   ){
-
-
        Box(
            modifier = Modifier
-               .alpha(max(0.3f, scrollState.value / scrollState.maxValue.toFloat()))
                .fillMaxWidth()
-               .height(56.dp)
-               .background(
-                   if (!darkTheme) StatusBarLightModeColor else Color.Black
-               ),
-
+               .height(56.dp),
            contentAlignment = Alignment.CenterStart
        ) {
+           Box(
+               modifier = Modifier .alpha(max(0.3f, scrollState.value / scrollState.maxValue.toFloat()))
+                   .fillMaxSize()
+                   .background(
+                       if (!darkTheme) StatusBarLightModeColor else Color.Black
+                   ),
+           )
 
            Row(
-               modifier = Modifier.fillMaxWidth(),
+               modifier = Modifier
+                   .fillMaxSize(),
                horizontalArrangement = Arrangement.Start,
                verticalAlignment = Alignment.CenterVertically
            ) {
-              // back arrow
+               // back arrow
                IconButton(
                    modifier = Modifier
                        .padding(start = 15.dp)
@@ -372,10 +305,8 @@ fun FadingTopBar(
                    )
                }
 
-
                Text(
                    modifier = Modifier
-                       //.fillMaxWidth()
                        .padding(start = 20.dp),
                    text = "Details",
                    fontWeight = FontWeight.SemiBold,
@@ -384,33 +315,22 @@ fun FadingTopBar(
 
            }
 
-//           Box(
+//           // back arrow
+//           IconButton(
 //               modifier = Modifier
-//                   .fillMaxWidth()
-//                   .alpha(max(0.3f, scrollState.value / scrollState.maxValue.toFloat()))
-//                   .background(
-//                       if (!darkTheme) StatusBarLightModeColor else Color.Black
-//                   )
-//           ) {
-//
+//                   .padding(start = 15.dp)
+//                   .alpha(1f),
+//               onClick = { navController.popBackStack() },
+//           ){
+//               Icon(
+//                   painter = painterResource(id = R.drawable.icons8_left_arrow_50),
+//                   contentDescription = "back arrow",
+//                   modifier = Modifier
+//                       .size(40.dp),
+//                   tint = Color.White,
+//               )
 //           }
+
        }
 
-
-//       IconButton(
-//           modifier = Modifier
-//               .padding(start = 15.dp)
-//               .align(Alignment.TopStart)
-//               .alpha(1f),
-//           onClick = { navController.popBackStack() }
-//       ){
-//           Icon(
-//               painter = painterResource(id = R.drawable.icons8_left_arrow_50),
-//               contentDescription = "back arrow",
-//               modifier = Modifier
-//                   .size(40.dp),
-//               tint = Color.White,
-//           )
-//       }
-    }
 }
