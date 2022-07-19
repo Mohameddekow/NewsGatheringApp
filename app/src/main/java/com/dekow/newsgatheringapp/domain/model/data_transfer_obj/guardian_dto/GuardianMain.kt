@@ -30,8 +30,6 @@ val results = this.response.results
 
         val sourcePublication  = result.fields.publication
 
-        val bodyText = result.fields.body
-
 
         NewsItem(
             image = result.fields.thumbnail,
