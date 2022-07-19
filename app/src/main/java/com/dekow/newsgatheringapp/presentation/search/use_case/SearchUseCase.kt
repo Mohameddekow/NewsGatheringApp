@@ -34,4 +34,6 @@ constructor(
             emit(Resource.Error<List<NewsItem>>("Something unexpected happened. Please try again"))
         }
     }
+
+
 }

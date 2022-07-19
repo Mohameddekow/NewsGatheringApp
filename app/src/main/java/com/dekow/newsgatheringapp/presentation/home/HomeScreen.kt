@@ -267,6 +267,7 @@ fun NewsOfTheDay(
                     .padding(bottom = 15.dp, top = 5.dp, start = 2.dp, end = 2.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .clickable {
+
                         val newsDetails = NewsDetailsItem(
                             image = breakingNews[0].image,
                             title = breakingNews[0].title,

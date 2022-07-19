@@ -1,12 +1,11 @@
 package com.dekow.newsgatheringapp.presentation.deatils
 
+import android.graphics.Paint
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -21,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -33,10 +33,8 @@ import coil.request.ImageRequest
 import com.dekow.newsgatheringapp.R
 import com.dekow.newsgatheringapp.domain.model.NewsDetailsItem
 import com.dekow.newsgatheringapp.presentation.screen.Screens
-import com.dekow.newsgatheringapp.ui.theme.DetailsItemBackgroundWhite
-import com.dekow.newsgatheringapp.ui.theme.LightModeBackgroundWhite
-import com.dekow.newsgatheringapp.ui.theme.PurpleWhite
-import com.dekow.newsgatheringapp.ui.theme.Test
+import com.dekow.newsgatheringapp.ui.theme.*
+import kotlin.math.max
 
 @Composable
 fun DetailsScreen(
@@ -45,12 +43,7 @@ fun DetailsScreen(
 ) {
     val newsDetails = sharedNewsDetailsViewModel.details
 
-//    Log.d("detailss2222", details?.bodyText.toString())
-//
-//
-//    LaunchedEffect(key1 = details){
-//        Log.d("detailss", details?.headline.toString())
-//    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -72,130 +65,134 @@ fun NewsDetails(
 ) {
     val darkTheme: Boolean = isSystemInDarkTheme()
 
-    //container box
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxSize(),
-        //contentAlignment = Alignment.Center//,
-    ) {
 
         //headline box
-        Box(
-            modifier = Modifier
-                .fillMaxHeight(0.43f)
-                .fillMaxWidth(),
+//        Box(
+//            modifier = Modifier
+//                // .fillMaxHeight(0.43f)
+//                .fillMaxWidth(),
+//        ) {}
+
+
+    val scrollState = rememberScrollState()
+
+
+
+
+        //news details box
+//        Box(
+//            modifier = Modifier
+//                .clip(
+//                    RoundedCornerShape(
+//                        topStart = 25.dp,
+//                        topEnd = 25.dp,
+//                        bottomStart = 0.dp,
+//                        bottomEnd = 0.dp
+//                    )
+//                )
+//                // .fillMaxHeight(0.6f)
+//                .fillMaxWidth()
+//                .background(
+//                    color = if (!darkTheme) LightModeBackgroundWhite else Color.Black
+//                )
+//            // .align(Alignment.BottomCenter),
+//        ) {}
+
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)//.fillMaxWidth()
         ) {
 
 
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(newsDetails?.image)
-                    .crossfade(true)
-                    .build(),
-                placeholder = painterResource(R.drawable.placeholder),
-                contentDescription = "image",
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(),
-                contentScale = ContentScale.FillBounds,
-                fallback = painterResource(id = R.drawable.placeholder)
-            )
-
-
-            //back arrow
-            IconButton(
-                modifier = Modifier.padding(start = 15.dp, top = 20.dp),
-                onClick = { navController.popBackStack() }
+                    .height(300.dp)
             ){
-                Icon(
-                    painter = painterResource(id = R.drawable.icons8_left_arrow_50),
-                    contentDescription = "back arrow",
-                    modifier = Modifier
-                        .size(40.dp)
-                        .align(Alignment.Center),
-                    tint = Color.White,
-                )
-            }
 
-            //headline news column
-            Column(
-                modifier = Modifier
-                    .padding(start = 15.dp, top = 100.dp, end = 15.dp),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Box(
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(newsDetails?.image)
+                        .crossfade(true)
+                        .build(),
+                    placeholder = painterResource(R.drawable.placeholder),
+                    contentDescription = "image",
                     modifier = Modifier
-                        .padding(top = 3.dp, bottom = 10.dp)
-                        .clip(RoundedCornerShape(45))
-                        .background(Test),
-                ) {
-                    newsDetails?.sectionName?.let {
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    contentScale = ContentScale.FillBounds,
+                    fallback = painterResource(id = R.drawable.placeholder)
+                )
+
+                Column(
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp, top = 70.dp)
+                ){
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 3.dp, bottom = 10.dp)
+                            .clip(RoundedCornerShape(45))
+                            .background(Test),
+                    ) {
+                        newsDetails?.sectionName?.let {
+                            Text(
+                                text = it,//"Health",
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
+                                color = Color.White
+                            )
+                        }
+                    }
+
+                    newsDetails?.headline?.let {
                         Text(
-                            text = it,//"Health",
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp),
-                            color = Color.White
+                            text = it,
+                            modifier = Modifier
+                                .padding(bottom = 5.dp, end = 5.dp)
+                                .fillMaxWidth(0.9f),
+                            textAlign = TextAlign.Start,
+                            fontSize = MaterialTheme.typography.h5.fontSize,
+                            color = PurpleWhite,
+                            maxLines = 3,
+                            fontWeight = FontWeight.Bold,
+                            overflow = TextOverflow.Ellipsis,
+
+                            )
+                    }
+
+                    newsDetails?.trailText?.let {
+                        Text(
+                            text = it,
+                            modifier = Modifier
+                                .padding(end = 5.dp, top = 3.dp, bottom = 10.dp),
+                            color = PurpleWhite,
                         )
                     }
                 }
 
-                newsDetails?.headline?.let {
-                    Text(
-                        text = it,
-                        modifier = Modifier
-                            .padding(bottom = 5.dp, end = 5.dp)
-                            .fillMaxWidth(0.9f),
-                        textAlign = TextAlign.Start,
-                        fontSize = MaterialTheme.typography.h5.fontSize,
-                        color = PurpleWhite,
-                        maxLines = 3,
-                        fontWeight = FontWeight.Bold,
-                        overflow = TextOverflow.Ellipsis,
-
-                    )
-                }
-
-                newsDetails?.trailText?.let {
-                    Text(
-                        text = it,
-                        modifier = Modifier
-                            .padding(end = 5.dp, top = 3.dp, bottom = 10.dp),
-                        color = PurpleWhite,
-                    )
-                }
-
             }
 
-        }
-
-
-        //news details box
-        Box(
-            modifier = Modifier
-                .clip(
-                    RoundedCornerShape(
-                        topStart = 25.dp,
-                        topEnd = 25.dp,
-                        bottomStart = 0.dp,
-                        bottomEnd = 0.dp
-                    )
-                )
-                .fillMaxHeight(0.6f)
-                .fillMaxWidth()
-                .background(
-                    color = if (!darkTheme) LightModeBackgroundWhite else Color.Black
-                )
-                .align(Alignment.BottomCenter),
-        ) {
 
             Column(
-                verticalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .padding(horizontal = 15.dp)
-                    .verticalScroll(rememberScrollState())
-
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 25.dp,
+                            topEnd = 25.dp,
+                            bottomStart = 0.dp,
+                            bottomEnd = 0.dp
+                        )
+                    )
+                    // .fillMaxHeight(0.6f)
+                    //.fillMaxWidth()
+                    .background(
+                        color = if (!darkTheme) LightModeBackgroundWhite else Color.Black
+                    )
+                // .align(Alignment.BottomCenter),
             ) {
-
                 Row(
                     modifier = Modifier
                         .padding(top = 20.dp, bottom = 20.dp)
@@ -242,7 +239,7 @@ fun NewsDetails(
                                     .padding(start = 6.dp),
                                 color = if (!darkTheme) PurpleWhite else Color.Black,
 
-                            )
+                                )
                         }
                     }
 
@@ -258,16 +255,16 @@ fun NewsDetails(
                         contentAlignment = Alignment.Center,
                     ) {
 
-                            newsDetails?.lastModified?.let {
-                                Text(
-                                    text =  it, //"5 hours ago",
+                        newsDetails?.lastModified?.let {
+                            Text(
+                                text =  it, //"5 hours ago",
 //                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = MaterialTheme.typography.subtitle2.fontSize,
-                                    color = if (!darkTheme) Color.Black else Color.Black,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                            }
+                                fontSize = MaterialTheme.typography.subtitle2.fontSize,
+                                color = if (!darkTheme) Color.Black else Color.Black,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
 
 
                     }
@@ -283,16 +280,16 @@ fun NewsDetails(
                             .padding(horizontal = 6.dp, vertical = 10.dp),
                         contentAlignment = Alignment.Center,
                     ) {
-                            newsDetails?.productionOffice?.let {
-                                Text(
-                                    text = it,  //5 ratings",
+                        newsDetails?.productionOffice?.let {
+                            Text(
+                                text = it,  //5 ratings",
 //                                    fontWeight = FontWeight.SemiBold,
-                                    fontSize = MaterialTheme.typography.subtitle2.fontSize,
-                                    color = if (!darkTheme) Color.Black else Color.Black,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
-                            }
+                                fontSize = MaterialTheme.typography.subtitle2.fontSize,
+                                color = if (!darkTheme) Color.Black else Color.Black,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
 
 
                     }
@@ -309,13 +306,111 @@ fun NewsDetails(
                         textAlign = TextAlign.Start,
                         fontSize = MaterialTheme.typography.subtitle1.fontSize,
 
-                    )
+                        )
                 }
             }
 
         }
 
+        FadingTopBar( scrollState = scrollState, navController = navController, darkTheme = darkTheme)
 
     }
+
+    //container box
+//    Box(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .fillMaxSize(),
+//        //contentAlignment = Alignment.Center,
+//    ) {
+//    }
+
 }
 
+@Composable
+fun FadingTopBar(
+    scrollState: ScrollState,
+    navController: NavHostController,
+    darkTheme: Boolean
+) {
+
+   Box(
+       contentAlignment = Alignment.Center
+   ){
+
+
+       Box(
+           modifier = Modifier
+               .alpha(max(0.3f, scrollState.value / scrollState.maxValue.toFloat()))
+               .fillMaxWidth()
+               .height(56.dp)
+               .background(
+                   if (!darkTheme) StatusBarLightModeColor else Color.Black
+               ),
+
+           contentAlignment = Alignment.CenterStart
+       ) {
+
+           Row(
+               modifier = Modifier.fillMaxWidth(),
+               horizontalArrangement = Arrangement.Start,
+               verticalAlignment = Alignment.CenterVertically
+           ) {
+              // back arrow
+               IconButton(
+                   modifier = Modifier
+                       .padding(start = 15.dp)
+                       .alpha(1f),
+                   onClick = { navController.popBackStack() },
+               ){
+                   Icon(
+                       painter = painterResource(id = R.drawable.icons8_left_arrow_50),
+                       contentDescription = "back arrow",
+                       modifier = Modifier
+                           .size(40.dp),
+                       tint = Color.White,
+                   )
+               }
+
+
+               Text(
+                   modifier = Modifier
+                       //.fillMaxWidth()
+                       .padding(start = 20.dp),
+                   text = "Details",
+                   fontWeight = FontWeight.SemiBold,
+                   fontSize = MaterialTheme.typography.h6.fontSize,
+               )
+
+           }
+
+//           Box(
+//               modifier = Modifier
+//                   .fillMaxWidth()
+//                   .alpha(max(0.3f, scrollState.value / scrollState.maxValue.toFloat()))
+//                   .background(
+//                       if (!darkTheme) StatusBarLightModeColor else Color.Black
+//                   )
+//           ) {
+//
+//           }
+       }
+
+
+//       IconButton(
+//           modifier = Modifier
+//               .padding(start = 15.dp)
+//               .align(Alignment.TopStart)
+//               .alpha(1f),
+//           onClick = { navController.popBackStack() }
+//       ){
+//           Icon(
+//               painter = painterResource(id = R.drawable.icons8_left_arrow_50),
+//               contentDescription = "back arrow",
+//               modifier = Modifier
+//                   .size(40.dp),
+//               tint = Color.White,
+//           )
+//       }
+    }
+}
