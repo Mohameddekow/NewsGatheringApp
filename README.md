@@ -1,6 +1,5 @@
 # NewsGatheringApp
-Gather News all over the world
-
+Gather News 
 # News Gathering App is
 An android app built using [Jetpack Compose](https://developer.android.com/jetpack/compose) that consumes [THE GUARDIAN API](https://open-platform.theguardian.com/documentation) to show news of the day, breaking news, news of different sections in addition you can also search for any news by just typing any keyword(s) 
 
